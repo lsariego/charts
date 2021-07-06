@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import routes from './config/settings/routes'
 import HomePage from './pages/Home'
 import NotFoundPage from './pages/NotFound'
 
@@ -10,8 +11,7 @@ const Routes = () => {
   return (
     <BrowserRouter>
       <Switch>
-        {/* FIXME: These routes are just examples, you can take them as references to make your owns. */}
-        <Route exact component={HomePage} path="/" />
+        <Route exact component={HomePage} path={routes.root} />
         <Route component={NotFoundPage} path="*" />
       </Switch>
     </BrowserRouter>
