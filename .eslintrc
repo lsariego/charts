@@ -19,6 +19,7 @@
   ],
   "rules": {
     "jsx-quotes": ["error", "prefer-double"],
+    "quote-props": "off",
     "space-before-function-paren": "off"
   }
 }
