@@ -1,0 +1,54 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: deploy-mserv-java-springboot
+objects:
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+    creationTimestamp: '2019-12-10T19:01:00Z'
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+    namespace: ${APP_NAMESPACE}
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${APP_NAME}:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      binary: {}
+      type: Binary
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: 'httpd:2.4'
+          namespace: openshift
+      type: Source
+    triggers: []
+  status: {}
+
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    generation: 1
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+  spec:
+    lookupPolicy:
+      local: false
+  status: {}
+parameters:
+- name: APP_NAME
+  required: true
+  value: "datos-abiertos-frontend"
+- name: APP_NAMESPACE
+  required: true
