@@ -1,0 +1,20 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "assets/images/logo_chilecompra.png",
+      "type": "image/png",
+      "sizes": "595x131"
+    }
+  ],
+  "name": "Chilecompra Frontend Boilerplate",
+  "short_name": "Frontend Boilerplate",
+  "start_url": ".",
+  "theme_color": "#0064FF"
+}

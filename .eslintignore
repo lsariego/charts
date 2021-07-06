@@ -1,0 +1,7 @@
+.azuredevops/**/*
+build/**/*
+node_modules/**/*
+public/**/*
+
+commitlint.config.js
+craco.config.js
