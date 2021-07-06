@@ -1,4 +1,6 @@
 .azuredevops/**/*
+.openshift/**/*
+.pipelines/**/*
 build/**/*
 node_modules/**/*
 public/**/*
