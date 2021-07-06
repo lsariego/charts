@@ -1,10 +1,8 @@
-// FIXME: This file is just an example, you can take it as reference to make your own.
-
 import React, { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { Transition } from 'react-transition-group'
 import PropTypes from 'prop-types'
-import { Root, CloseIcon, Content, GlobalStyles } from './Modal.styles'
+import { CloseIcon, Content, GlobalStyles, Root } from './Modal.styles'
 
 const TRANSITION_DURATION = 200
 const defaultStyle = {
@@ -20,7 +18,7 @@ const transitionStyles = {
  * The Modal's component.
  */
 const Modal = props => {
-  const { children, maxWidth, open, onClose } = props
+  const { children, maxWidth, open, position, onClose, onOpenCallback } = props
   const rootRef = useRef(undefined)
   const handleClick = event => event.stopPropagation()
   const handleEscape = event => {
@@ -35,6 +33,10 @@ const Modal = props => {
   useEffect(() => {
     if (!open || !rootRef.current) {
       return
+    }
+
+    if (open) {
+      onOpenCallback()
     }
 
     rootRef.current.focus()
@@ -57,8 +59,8 @@ const Modal = props => {
             onClick={onClose}
             onKeyDown={handleEscape}
           >
-            <Content maxWidth={maxWidth} onClick={handleClick}>
-              <CloseIcon src="/assets/images/close_icon.svg" onClick={onClose} />
+            <Content maxWidth={maxWidth} position={position} onClick={handleClick}>
+              <CloseIcon onClick={onClose} />
               {children}
             </Content>
           </Root>
@@ -71,13 +73,16 @@ const Modal = props => {
 
 Modal.defaultProps = {
   maxWidth: '500px',
-  onClose: () => undefined
+  onClose: () => undefined,
+  onOpenCallback: () => undefined
 }
 Modal.propTypes = {
   children: PropTypes.node.isRequired,
   maxWidth: PropTypes.string,
   open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func
+  position: PropTypes.string,
+  onClose: PropTypes.func,
+  onOpenCallback: PropTypes.func
 }
 
 export default Modal

@@ -1,12 +1,10 @@
-// FIXME: This file is just an example, you can take it as reference to make your own.
-
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
 export const Root = styled.div`
   display: flex;
   height: auto;
-  margin: 0 0 50px;
+  margin: 50px 0 50px;
   width: 100%;
 `
 
