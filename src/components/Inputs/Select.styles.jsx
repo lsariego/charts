@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import styled from 'styled-components'
 import { InputBase, MenuItem, Select } from '@material-ui/core'
+import { ExpandMore } from '@material-ui/icons'
+import { hexToRGBA } from '../../modules/utils/color'
 
 export const Root = styled.div`
   display: inline-flex;
@@ -8,21 +10,22 @@ export const Root = styled.div`
   font-family: ${props => props.theme.typography.fontFamily};
   margin: ${props => props.margin};
   padding: ${props => props.padding};
-  width: 100%;
+  width: ${props => props.width || '100%'};
 `
 
 export const Label = styled.label`
-  color: ${props => props.theme.palette.custom.baliHai};
+  color: ${props => props.theme.palette.blackGrayBrand.black3};
   font-size: 12px;
-  font-weight: ${props => props.theme.fontWeights[500]};
+  font-weight: ${props => props.theme.fontWeights[600]};
   letter-spacing: 1.125px;
   line-height: 14px;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.3rem;
   text-transform: uppercase;
 `
 
-export const RequiredIcon = styled.i`
-  color: ${props => props.theme.palette.custom.baliHai};
+export const Required = styled(({ ...props }) => <span {...props}>*</span>)`
+  color: ${props => props.theme.palette.blackGrayBrand.black3};
+  font-size: 1rem;
 `
 
 export const Wrapper = styled.section`
@@ -32,11 +35,22 @@ export const Wrapper = styled.section`
 
 export const Placeholder = styled.section`
   align-items: center;
-  color: ${props => props.theme.palette.custom.baliHai};
+  color: ${props => props.theme.palette.blackGrayBrand.black3};
   display: flex;
   font-family: ${props => props.theme.typography.fontFamily};
   font-size: 1rem;
   height: 100%;
+  justify-content: ${props => {
+    if (props.textAlign === 'end') {
+      return 'flex-end'
+    }
+
+    if (props.textAlign === 'start') {
+      return 'flex-start'
+    }
+
+    return props.textAlign
+  }};
   left: 0;
   line-height: 1.5;
   opacity: 0.42;
@@ -52,6 +66,11 @@ export const BaseSelect = styled(({ className, maxWidth, ...props }) => (
   <Select {...props} MenuProps={{ ...props.MenuProps, classes: { paper: className } }} styles={{ maxWidth }} />
 ))`
   max-width: ${props => props.maxWidth};
+  width: ${props => props.maxWidth};
+
+  ${props => props.theme.breakpoints.down('sm')} {
+    max-width: calc(100% - 32px);
+  }
 
   & ul {
     border-radius: 4px;
@@ -59,18 +78,20 @@ export const BaseSelect = styled(({ className, maxWidth, ...props }) => (
   }
 `
 
-export const BaseInput = styled(InputBase)`
+// eslint-disable-next-line react/prop-types
+export const BaseInput = styled(forwardRef(({ textAlign, ...props }, ref) => <InputBase {...props} ref={ref} />))`
   background-clip: padding-box;
-  background-color: ${props => props.theme.palette.brand.white};
-  border: 1px solid ${props => props.theme.palette.custom.ghost};
+  background-color: ${props => props.theme.palette.blackGrayBrand.white};
+  border: 1px solid ${props => props.theme.palette.blackGrayBrand.gray1};
   border-radius: 0.25rem;
   box-sizing: border-box;
-  color: ${props => props.theme.palette.brand.bigStone};
+  color: ${props => props.theme.palette.blackGrayBrand.black1};
   display: block;
   font-size: 1rem;
   height: calc(1.5em + 0.75rem + 2px);
   line-height: 1.5;
   position: relative;
+  text-align: ${props => props.textAlign};
   -webkit-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
@@ -86,8 +107,8 @@ export const BaseInput = styled(InputBase)`
 
   &.Mui-disabled {
     background-color: rgba(46, 91, 255, 0.05);
-    border: 1px solid ${props => props.theme.palette.custom.heather};
-    color: ${props => props.theme.palette.custom.baliHai};
+    border: 1px solid ${props => props.theme.palette.blackGrayBrand.gray1};
+    color: ${props => props.theme.palette.blackGrayBrand.black3};
     cursor: not-allowed;
   }
 
@@ -96,11 +117,11 @@ export const BaseInput = styled(InputBase)`
   }
 
   &.Mui-error {
-    border: 1px solid ${props => props.theme.palette.brand.alizarinCrimson};
+    border: 1px solid ${props => props.theme.palette.error.main};
   }
 
   &.Mui-error.Mui-focused {
-    box-shadow: 0 0 0 0.2rem rgba(225, 83, 97, 0.5);
+    box-shadow: 0 0 0 0.2rem ${props => hexToRGBA(props.theme.palette.error.main, 0.5)};
   }
 
   & .MuiSelect-select {
@@ -108,7 +129,7 @@ export const BaseInput = styled(InputBase)`
     padding: 0.375rem 24px 0.375rem 0.75rem;
 
     &:focus {
-      background-color: ${props => props.theme.palette.brand.white};
+      background-color: ${props => props.theme.palette.blackGrayBrand.white};
       border-radius: 0.25rem;
     }
   }
@@ -125,16 +146,16 @@ export const DropDown = styled.section`
   user-select: none;
 `
 
-export const DropDownIcon = styled.i`
-  color: ${props => (props.error ? props.theme.palette.brand.alizarinCrimson : props.theme.palette.custom.baliHai)};
-  font-size: 14px;
+export const DropDownIcon = styled(ExpandMore)`
+  color: ${({ error, theme }) => (error ? theme.palette.error.main : theme.palette.blackGrayBrand.black3)};
+  font-size: 24px;
   pointer-events: none;
   user-select: none;
 `
 
 export const Option = styled(MenuItem)`
-  background-color: ${props => props.theme.palette.brand.white};
-  color: ${props => props.theme.palette.brand.bigStone};
+  background-color: ${props => props.theme.palette.blackGrayBrand.white};
+  color: ${props => props.theme.palette.blackGrayBrand.black1};
   font-family: ${props => props.theme.typography.fontFamily};
   font-size: 14px;
   padding: 6px 12px;
@@ -169,11 +190,20 @@ export const OptionContent = styled.div`
   white-space: nowrap;
 `
 
-export const Error = styled.section`
-  color: ${props => props.theme.palette.brand.alizarinCrimson};
+export const BottomMessage = styled.section`
+  font-family: ${props => props.theme.typography.fontFamily};
   font-size: 12px;
   letter-spacing: 0;
-  line-height: 16px;
+  line-height: 14px;
   margin: 3px 0 0;
   min-height: 20px;
+`
+
+export const Info = styled.section`
+  color: ${props => props.theme.palette.blackGrayBrand.black3};
+  font-style: italic;
+`
+
+export const Error = styled.section`
+  color: ${props => props.theme.palette.error.main};
 `

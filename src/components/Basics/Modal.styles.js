@@ -1,10 +1,10 @@
-// FIXME: This file is just an example, you can take it as reference to make your own.
-
 import styled, { createGlobalStyle } from 'styled-components'
+import { Close } from '@material-ui/icons'
+import { hexToRGBA } from '../../modules/utils/color'
 
 export const Root = styled.div`
   align-items: center;
-  background-color: rgba(250, 250, 250, 0.8);
+  background-color: ${props => hexToRGBA(props.theme.palette.blackGrayBrand.black3, 0.5)};
   display: ${props => (props.show ? 'flex' : 'none')};
   height: 100vh;
   justify-content: center;
@@ -12,23 +12,23 @@ export const Root = styled.div`
 `
 
 export const Content = styled.div`
-  background-color: ${({ theme }) => theme.palette.brand.white};
-  border-radius: 1px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.14);
+  background-color: ${props => props.theme.palette.blackGrayBrand.white};
+  border: 1px solid rgba(46, 91, 255, 0.08);
   margin: 100px auto;
   max-width: ${props => props.maxWidth};
   padding: 20px;
-  position: relative;
+  position: ${props => props.position || 'relative'};
+  top: 0;
   width: 100%;
 `
 
-export const CloseIcon = styled.img`
-  color: ${props => props.theme.palette.custom.baliHai};
+export const CloseIcon = styled(Close)`
+  color: ${props => props.theme.palette.blackGrayBrand.black3};
   cursor: pointer;
-  font-size: 14px;
+  font-size: 1.5rem;
   position: absolute;
-  right: 18px;
-  top: 17px;
+  right: 13px;
+  top: 12px;
 `
 
 export const GlobalStyles = createGlobalStyle`

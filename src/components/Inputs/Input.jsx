@@ -1,14 +1,37 @@
-// FIXME: This file is just an example, you can take it as reference to make your own.
-
 import React from 'react'
 import PropTypes from 'prop-types'
-import { BaseInput, Error, Label, RequiredIcon, Root } from './Input.styles'
+import Skeleton from '../Placeholders/Skeleton'
+import { BaseInput, BottomMessage, Counter, Details, Error, Info, Label, Required, Root } from './Input.styles'
+export { Prefix as InputPrefix, Suffix as InputSuffix } from './Input.styles'
 
 /**
  * The Input's component.
  */
 const Input = props => {
-  const { autoFocus, disabled, error, label, margin, padding, placeholder, required, type, value, onChange } = props
+  const {
+    autoFocus,
+    showCounter,
+    disabled,
+    error,
+    info,
+    label,
+    loading,
+    margin,
+    maxLength,
+    maxCharactersForCounter,
+    padding,
+    placeholder,
+    prefix,
+    required,
+    suffix,
+    textAlign,
+    type,
+    value,
+    width,
+    onChange,
+    onPaste
+  } = props
+
   const handleBlur = () => {
     if (value) {
       return
@@ -18,52 +41,89 @@ const Input = props => {
   }
 
   return (
-    <Root margin={margin} padding={padding}>
+    <Root margin={margin} padding={padding} width={width}>
       {label && (
         <Label>
           {`${label} `}
-          {required && <RequiredIcon className="fas fa-asterisk" />}
+          {required && <Required />}
         </Label>
       )}
-      <BaseInput
-        autoFocus={autoFocus}
-        disabled={disabled}
-        error={Boolean(error)}
-        placeholder={placeholder}
-        type={type}
-        value={value}
-        onBlur={handleBlur}
-        onChange={onChange}
-      />
-      <Error>{error}</Error>
+      {loading && <Skeleton variant="rect" height={38} />}
+      {!loading && (
+        <BaseInput
+          autoFocus={autoFocus}
+          disabled={disabled}
+          endAdornment={suffix}
+          error={Boolean(error)}
+          inputProps={{ maxLength }}
+          placeholder={placeholder}
+          startAdornment={prefix}
+          textAlign={textAlign}
+          type={type}
+          value={value}
+          onBlur={handleBlur}
+          onChange={onChange}
+          onPaste={onPaste}
+        />
+      )}
+      <Details>
+        <BottomMessage>
+          {!error && <Info>{info}</Info>}
+          {error && <Error>{error}</Error>}
+        </BottomMessage>
+        {showCounter && (
+          <Counter>
+            {value.length}/{maxCharactersForCounter}
+          </Counter>
+        )}
+      </Details>
     </Root>
   )
 }
 
 Input.defaultProps = {
   autoFocus: false,
+  showCounter: false,
   disabled: false,
   error: '',
+  info: '',
   label: '',
+  loading: false,
   margin: 0,
+  maxCharactersForCounter: 30,
   padding: 0,
   placeholder: '',
+  prefix: null,
   required: false,
+  suffix: null,
+  textAlign: 'initial',
   type: 'text',
-  onChange: () => undefined
+  width: 'initial',
+  onChange: () => undefined,
+  onPaste: () => undefined
 }
 Input.propTypes = {
   autoFocus: PropTypes.bool,
+  showCounter: PropTypes.bool,
   disabled: PropTypes.bool,
   error: PropTypes.string,
+  info: PropTypes.string,
   label: PropTypes.string,
+  loading: PropTypes.bool,
   margin: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  maxCharactersForCounter: PropTypes.number,
+  maxLength: PropTypes.number,
   padding: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   placeholder: PropTypes.string,
+  prefix: PropTypes.node,
   required: PropTypes.bool,
-  type: PropTypes.oneOf(['email', 'number', 'text']),
+  suffix: PropTypes.node,
+  textAlign: PropTypes.oneOf(['center', 'end', 'initial', 'start']),
+  type: PropTypes.oneOf(['email', 'number', 'password', 'text']),
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  onChange: PropTypes.func
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  onChange: PropTypes.func,
+  onPaste: PropTypes.func
 }
 
 export default Input

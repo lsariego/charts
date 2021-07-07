@@ -26,3 +26,14 @@ export const putIntoCookie = (key, value, customOptions = {}) => {
     logger.warn(`Unable to put data into cookie ${key}`, error)
   }
 }
+
+/**
+ * To remove a cookie.
+ */
+export const removeCookie = key => {
+  try {
+    Cookie.remove(key)
+  } catch (error) {
+    logger.warn(`Unable to remove cookie ${key}`, error)
+  }
+}

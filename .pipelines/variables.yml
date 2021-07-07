@@ -1,0 +1,8 @@
+# This template is useful to declare used variables on the pipeline
+
+variables:
+
+# used variables around at all Stages: Development, PreProduction, Production.
+# 'appName' is invoked inside deploy-tasks.yaml
+  - name: appName
+    value: 'datos-abiertos-frontend'

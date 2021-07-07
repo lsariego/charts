@@ -1,8 +1,6 @@
-// FIXME: This file is just an example, you can take it as reference to make your own.
-
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Root, Link, Text } from './Breadcrumbs.styles'
+import { ExtenalLink, Link, Root, Text } from './Breadcrumbs.styles'
 
 /**
  * The Breadcrumbs' component.
@@ -14,9 +12,19 @@ const Breadcrumbs = props => {
     <Root aria-label={accessibility.label}>
       {breadcrumbs.map((breadcrumb, index) =>
         breadcrumb.link ? (
-          <Link key={`breadcrumb-link-${index}`} to={breadcrumb.link}>
-            {breadcrumb.text}
-          </Link>
+          breadcrumb.isExternal ? (
+            <ExtenalLink
+              key={`breadcrumb-link-${index}`}
+              href={breadcrumb.link}
+              onClick={breadcrumb.onClick || undefined}
+            >
+              {breadcrumb.text}
+            </ExtenalLink>
+          ) : (
+            <Link key={`breadcrumb-link-${index}`} to={breadcrumb.link}>
+              {breadcrumb.text}
+            </Link>
+          )
         ) : (
           <Text key={`breadcrumb-text-${index}`}>{breadcrumb.text}</Text>
         )
@@ -36,8 +44,10 @@ Breadcrumbs.propTypes = {
   }),
   breadcrumbs: PropTypes.arrayOf(
     PropTypes.shape({
+      isExternal: PropTypes.bool,
       link: PropTypes.string,
-      text: PropTypes.string.isRequired
+      text: PropTypes.string.isRequired,
+      onClick: PropTypes.func
     })
   ).isRequired
 }

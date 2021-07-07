@@ -1,7 +1,9 @@
-.azuredevops/**/*
-build/**/*
-node_modules/**/*
-public/**/*
+.azuredevops
+.openshift
+.pipelines
+build
+node_modules
+public
 
 commitlint.config.js
 craco.config.js

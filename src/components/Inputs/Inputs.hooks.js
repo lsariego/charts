@@ -1,37 +1,50 @@
-// FIXME: This file is just an example, you can take it as reference to make your own.
+import { useEffect, useMemo, useState } from 'react'
 
-import { useMemo, useState } from 'react'
+/**
+ * To apply a bunch of formatters to the given value.
+ */
+const makeFormat = (callbacks, value) => callbacks.reduce((updatedValue, callback) => callback(updatedValue), value)
+
+/**
+ * To apply a bunch of validators to the given value.
+ */
+const makeError = (callbacks, value) =>
+  callbacks.reduce((message, callback) => {
+    if (message !== '') {
+      return message
+    }
+
+    return callback(value)
+  }, '')
 
 /**
  * The Input's custom hook.
  */
-export const useInput = ({ errorCallbacks = [], errorMessage = '', initialValue = '' }) => {
+export const useInput = ({
+  changeCallback = () => undefined,
+  errorCallbacks = [],
+  formatCallbacks = [],
+  initialValue = ''
+} = {}) => {
+  const [error, setError] = useState('')
   const [value, setValue] = useState(initialValue)
-  const [count, setCount] = useState(0)
   const handleChange = event => {
-    if (event.type === 'blur') {
-      return setCount(count + 1)
+    const updatedValue = makeFormat(formatCallbacks, event?.target?.value || '')
+    const updatedError = makeError(errorCallbacks, updatedValue)
+
+    setError(updatedError)
+    setValue(updatedValue)
+
+    if (updatedValue === value) {
+      return
     }
 
-    setValue(event?.target?.value)
+    changeCallback(updatedValue)
   }
-  const error = useMemo(() => {
-    if (errorMessage !== '') {
-      return errorMessage
-    }
 
-    if (count === 0) {
-      return ''
-    }
-
-    return errorCallbacks.reduce((message, callback) => {
-      if (message !== '') {
-        return message
-      }
-
-      return callback(value)
-    }, '')
-  }, [count, value])
+  useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
 
   return { error, value, onChange: handleChange }
 }
