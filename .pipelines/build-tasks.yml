@@ -1,0 +1,65 @@
+# This template is useful to React Apps that deploys on Openshift platform.
+# This template just make a zip with the source code and make the corresponding artifact.
+
+# with these lines, the pipeline sets a default value to 'npmBuildArgument' when the template is invoked, 
+# but this paramater ins't declared in the pipeline
+parameters:
+  npmBuildArgument: 'run build:dev'
+
+steps:
+  - task: Npm@1
+    displayName: 'npm install'
+    inputs:
+      command: 'install'
+      workingDir: '$(System.DefaultWorkingDirectory)'
+  - task: Npm@1
+    displayName: 'npm run format'
+    inputs:
+      command: 'custom'
+      workingDir: '$(System.DefaultWorkingDirectory)'
+      customCommand: 'run format'
+  - task: Npm@1
+    displayName: 'npm run lint'
+    inputs:
+      command: 'custom'
+      workingDir: '$(System.DefaultWorkingDirectory)'
+      customCommand: 'run lint'
+  - task: Npm@1
+    displayName: 'npm build'
+    inputs:
+      command: 'custom'
+      workingDir: '$(System.DefaultWorkingDirectory)'
+      customCommand: '${{ parameters.npmBuildArgument }}'
+  - task: CopyFiles@2
+    displayName: 'copy build folder'
+    inputs:
+      sourceFolder: '$(System.DefaultWorkingDirectory)/build'
+      contents: '**'
+      targetFolder: '$(System.DefaultWorkingDirectory)/artifact/build'
+      cleanTargetFolder: true
+  - task: CopyFiles@2
+    displayName: 'copy openshift folder'
+    inputs:
+      sourceFolder: '$(System.DefaultWorkingDirectory)/.openshift'
+      contents: '**'
+      targetFolder: '$(System.DefaultWorkingDirectory)/artifact/.openshift'
+  - task: ArchiveFiles@2
+    displayName: 'create zip file'
+    inputs:
+      rootFolderOrFile: '$(System.DefaultWorkingDirectory)/artifact'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      replaceExistingArchive: true
+  - task: PublishPipelineArtifact@1
+    displayName: 'publish pipeline artifact'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      artifact: 'drop'
+      publishLocation: 'pipeline'
+  - task: DeleteFiles@1
+    displayName: 'delete used resources'
+    inputs:
+      SourceFolder: '$(System.DefaultWorkingDirectory)'
+      Contents: '**/*'
+      RemoveSourceFolder: true

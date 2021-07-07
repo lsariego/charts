@@ -1,0 +1,74 @@
+# This template is useful to React Apps that deploys on Openshift platform.
+# Notes:
+# - You must ensure that the variables have a value: appName, appRoute, ocpNamespace, ocpToken
+#     appName -> the used aplication's name for Openshift to creates the pod. This variable is declared on variables.yml
+#     appRoute -> the domain where the app is. This is declared on azure-pipelines.yml
+#     appPath --> the subpath where the app is located. This is declared on azure-pipeline.yml and is used by deploy-template.yaml
+#     ocpNamespace -> the namespace where the aplication's pod is installed. This is declared on azure-pipelines.yml
+#     ocpToken -> the token that Openshift requires to do the deployments. This is declared on variable groups called 'ReleaseReferences'
+#     appSSLMercadopublico -> defines if is used mercadopublico.cl SSL. Values: true or false
+#     appSSLChilecompra -> defines if is used chilecompra.cl SSL. Values: true or false
+
+# commons deploy task for the 3 stages: Development, PreProduction, Production
+steps:
+#  - task: CmdLine@2
+#    displayName: 'delete previous artifacts'
+#    inputs:
+#      script: ' rm -f $(System.DefaultWorkingDirectory)/*'
+  - task: DownloadPipelineArtifact@2
+    displayName: 'download pipeline artifact'
+    inputs:
+      buildType: 'current'
+      artifactName: 'drop'
+      targetPath: '$(System.DefaultWorkingDirectory)/drop'
+  - task: CmdLine@2
+    displayName: 'find zip file'
+    inputs:
+      script: ' ls -ltr $(System.DefaultWorkingDirectory)/drop'
+  - task: ExtractFiles@1
+    displayName: 'extract files'
+    inputs:
+      archiveFilePatterns: '$(System.DefaultWorkingDirectory)/drop/$(Build.BuildId).zip'
+      destinationFolder: '$(System.DefaultWorkingDirectory)/_artifact'
+      cleanDestinationFolder: true
+  - task: Bash@3
+    displayName: 'local - process deploy template'
+    inputs:
+      targetType: 'inline'
+      script: 'oc process -f $(System.DefaultWorkingDirectory)/_artifact/.openshift/deploy-template.yaml -p APP_NAME=$(appName) -p APP_ROUTE=$(appRoute) -p APP_PATH=$(appPath) -p APP_NAMESPACE=$(ocpNamespace) -p APP_SSL_MERCADOPUBLICO=$(appSSLMercadopublico) -p APP_SSL_CHILECOMPRA=$(appSSLChilecompra) -n $(ocpNamespace) --local > $(System.DefaultWorkingDirectory)/_artifact/.openshift/deploy.yaml'
+  - task: Bash@3
+    displayName: 'local - process build template'
+    inputs:
+      targetType: 'inline'
+      script: 'oc process -f $(System.DefaultWorkingDirectory)/_artifact/.openshift/build-template.yaml -p APP_NAME=$(appName) -p APP_NAMESPACE=$(ocpNamespace) -n $(ocpNamespace) --local > $(System.DefaultWorkingDirectory)/_artifact/.openshift/build.yaml'
+  - task: Bash@3
+    displayName: 'oc - apply deploy'
+    inputs:
+      targetType: 'inline'
+      script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false  apply -f $(System.DefaultWorkingDirectory)/_artifact/.openshift/deploy.yaml  -n $(ocpNamespace)'
+  - task: Bash@3
+    displayName: 'oc - pause deployment rollout'
+    inputs:
+      targetType: 'inline'
+      script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false rollout pause dc/$(appName)  -n $(ocpNamespace)'
+  - task: Bash@3
+    displayName: 'oc - apply build'
+    inputs:
+      targetType: 'inline'
+      script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false apply -f $(System.DefaultWorkingDirectory)/_artifact/.openshift/build.yaml  -n $(ocpNamespace)'
+  - task: Bash@3
+    displayName: 'oc - start build'
+    inputs:
+      targetType: 'inline'
+      script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false start-build $(appName) --from-dir=$(System.DefaultWorkingDirectory)/_artifact/build/. -w  -n $(ocpNamespace)'
+  - task: Bash@3
+    displayName: 'oc - rollout deployment'
+    inputs:
+      targetType: 'inline'
+      script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false rollout resume dc/$(appName)  -n $(ocpNamespace)'
+  - task: DeleteFiles@1
+    displayName: 'delete used resources'
+    inputs:
+      SourceFolder: '$(System.DefaultWorkingDirectory)'
+      Contents: '**/*'
+      RemoveSourceFolder: true
