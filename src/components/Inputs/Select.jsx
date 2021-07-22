@@ -5,6 +5,7 @@ import {
   BaseSelect,
   DropDown,
   DropDownIcon,
+  ItemCheckBox,
   Error,
   Label,
   Option,
@@ -19,7 +20,20 @@ import {
  * The Select' component.
  */
 const Select = props => {
-  const { disabled, error, label, margin, maxWidth, options, padding, placeholder, required, value, onChange } = props
+  const {
+    disabled,
+    error,
+    multiple,
+    label,
+    margin,
+    maxWidth,
+    options,
+    padding,
+    placeholder,
+    required,
+    value,
+    onChange
+  } = props
   const handleBlur = event => {
     if (event.target.value || event.target.value === 0) {
       return
@@ -40,11 +54,13 @@ const Select = props => {
       )}
       <Wrapper>
         <BaseSelect
+          multiple={multiple}
           disabled={disabled}
           error={Boolean(error)}
+          renderValue={multiple ? selected => selected.join(', ') : null}
           IconComponent={() => (
             <DropDown>
-              <DropDownIcon className="fas fa-chevron-down" error={Boolean(error)} />
+              <DropDownIcon color="disabled" fontSize="small" />
             </DropDown>
           )}
           input={<BaseInput />}
@@ -61,6 +77,7 @@ const Select = props => {
         >
           {options.map(option => (
             <Option disableGutters key={option.value} value={option.value}>
+              {multiple ? <ItemCheckBox color="primary" checked={value.indexOf(option.value) > -1} /> : null}
               <OptionContent title={option.name}>{option.name}</OptionContent>
             </Option>
           ))}
@@ -75,6 +92,7 @@ const Select = props => {
 Select.defaultProps = {
   disabled: false,
   error: '',
+  multiple: false,
   label: '',
   margin: 0,
   maxWidth: 'initial',
@@ -87,19 +105,20 @@ Select.defaultProps = {
 Select.propTypes = {
   disabled: PropTypes.bool,
   error: PropTypes.string,
+  multiple: PropTypes.bool,
   label: PropTypes.string,
-  margin: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  maxWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  margin: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
+  maxWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
   options: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
-      value: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+      value: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array])
     })
   ).isRequired,
-  padding: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  padding: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
   placeholder: PropTypes.string,
   required: PropTypes.bool,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array]).isRequired,
   onChange: PropTypes.func
 }
 

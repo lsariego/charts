@@ -1,30 +1,27 @@
-// FIXME: This file is just an example, you can take it as reference to make your own.
-
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { DefaultButton, Loading, LoadingIcon, PrimaryButton, SecondaryButton } from './Button.styles'
+import { ContainedButton, Loading, LoadingIcon, OutlinedButton, TextButton } from './Button.styles'
 
 /**
  * The Button's component.
  */
 const Button = props => {
-  const { children, disabled, loading, reverse, size, type, variant, width, onClick } = props
+  const { children, color, component, disabled, loading, margin, size, type, variant, width, onClick } = props
   const BaseButton = useMemo(() => {
-    if (variant === 'primary') {
-      return PrimaryButton
+    if (variant === 'outlined') {
+      return OutlinedButton
+    } else if (variant === 'text') {
+      return TextButton
     }
-
-    if (variant === 'secondary') {
-      return SecondaryButton
-    }
-
-    return DefaultButton
+    return ContainedButton
   }, [variant])
 
   return (
     <BaseButton
+      color={color}
+      component={component}
       disabled={disabled}
-      reverse={reverse ? 1 : 0}
+      margin={margin}
       size={size}
       type={type}
       variant={variant}
@@ -43,23 +40,26 @@ const Button = props => {
 }
 
 Button.defaultProps = {
+  color: 'default',
+  component: 'button',
   disabled: false,
   loading: false,
-  reverse: false,
-  size: 'lg',
+  size: 'medium',
   type: 'button',
-  variant: 'default',
+  variant: 'contained',
   width: 'initial',
   onClick: () => undefined
 }
 Button.propTypes = {
   children: PropTypes.node.isRequired,
+  color: PropTypes.oneOf(['default', 'primary', 'success', 'error', 'warning', 'info']),
+  component: PropTypes.oneOf(['button', 'label']),
   disabled: PropTypes.bool,
   loading: PropTypes.bool,
-  reverse: PropTypes.bool,
-  size: PropTypes.oneOf(['sm', 'lg']),
+  margin: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  size: PropTypes.oneOf(['small', 'medium', 'large']),
   type: PropTypes.oneOf(['button', 'submit']),
-  variant: PropTypes.oneOf(['default', 'primary', 'secondary']),
+  variant: PropTypes.oneOf(['contained', 'outlined', 'text']),
   width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   onClick: PropTypes.func
 }
