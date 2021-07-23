@@ -1,26 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useRef, forwardRef } from 'react'
 import PropTypes from 'prop-types'
 import { Box } from '@material-ui/core'
 import formatNumber from '../../modules/utils/format-number'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
+import useLineChart from './LineChart.hooks'
+import { GlobalStyle } from './LineChart.styles'
 import { exportComponentAsJPEG } from 'react-component-export-image'
 import InfoLabel from '../Labels/InfoLabel'
 
-const LineChart = ({ data }) => {
-  const [amounts, setAmounts] = useState([])
-  const colors = ['#0097A7', '#FBC02D', '#F57C00', '#E64A19']
-
-  useEffect(() => {
-    const setData = () => {
-      const arrayAmounts = data.map((item, index) => ({
-        ...item,
-        color: colors[index]
-      }))
-      setAmounts(arrayAmounts)
-    }
-    setData()
-  }, [data])
+const LineChart = ({ chartStructure, inputLineChart }) => {
+  const { serie: info, category: categories } = useLineChart(chartStructure)
 
   const options = {
     title: {
@@ -42,22 +32,9 @@ const LineChart = ({ data }) => {
       max: 11,
       startOnTick: false,
       endOnTick: false,
-      categories: [
-        'Enero',
-        'Febrero',
-        'Marzo',
-        'Abril',
-        'Mayo',
-        'Junio',
-        'Julio',
-        'Agosto',
-        'Septiembre',
-        'Octubre',
-        'Noviembre',
-        'Diciembre'
-      ]
+      categories: categories
     },
-    series: amounts,
+    series: info,
     tooltip: {
       borderWidth: 1,
       shadow: true,
@@ -87,7 +64,11 @@ const LineChart = ({ data }) => {
     }
   }
 
-  const ComponentToPrint = React.forwardRef((props, ref) => (
+  const exportImage = () => {
+    exportComponentAsJPEG(componentRef)
+  }
+
+  const ComponentToPrint = forwardRef((props, ref) => (
     <div ref={ref}>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
@@ -97,10 +78,11 @@ const LineChart = ({ data }) => {
 
   return (
     <>
+      <GlobalStyle />
       <ComponentToPrint ref={componentRef} />
-      <div onClick={() => exportComponentAsJPEG(componentRef)} id="exportLineChart" />
+      <div onClick={exportImage} ref={inputLineChart} />
       <Box mb={2}>
-        {amounts.map(item => (
+        {info.map(item => (
           <InfoLabel key={item.name} label={item.name} color={item.color} />
         ))}
       </Box>
@@ -109,7 +91,15 @@ const LineChart = ({ data }) => {
 }
 
 LineChart.propTypes = {
-  data: PropTypes.array
+  inputLineChart: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
+  chartStructure: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      mes: PropTypes.number.isRequired,
+      data: PropTypes.number.isRequired,
+      montoAcumulado: PropTypes.string.isRequired
+    }).isRequired
+  ).isRequired
 }
 
 export default LineChart

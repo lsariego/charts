@@ -1,15 +1,15 @@
-import { batch } from 'react-redux'
 import { makeActionCreator } from '../../config/store/utils'
 
-export const TRADEDAMOUNT_START = 'TRADEDAMOUNT_START'
-export const TRADEDAMOUNT_SUCCESS = 'TRADEDAMOUNT_SUCCESS'
+export const TRADEDAMOUNT_START = 'TRADEDAMOUNT'
 export const TRADEDAMOUNT_ERROR = 'TRADEDAMOUNT_ERROR'
-export const onTradedAmountStart = makeActionCreator(TRADEDAMOUNT_START)
-export const onTradedAmountSuccess = makeActionCreator(TRADEDAMOUNT_SUCCESS, 'payload', 'jsonData')
+export const TRADEDAMOUNT_SUCCESS = 'TRADEDAMOUNT_SUCCESS'
+export const onTradedAmount = makeActionCreator(TRADEDAMOUNT_START)
 export const onTradedAmountError = makeActionCreator(TRADEDAMOUNT_ERROR)
+export const onTradedAmountSuccess = makeActionCreator(TRADEDAMOUNT_SUCCESS, 'payload')
 
-export const fetchTradedAmounts = () => dispatch => {
-  const payload = [
+export const onTradedAmountThunk = () => dispatch => {
+  // Fake Data to load //
+  const initData = [
     {
       year: 2021,
       data: [
@@ -62,7 +62,7 @@ export const fetchTradedAmounts = () => dispatch => {
       ]
     }
   ]
-  const arrayAmounts = payload.map(({ year, data: innerData }, index) => ({
+  const arrayAmounts = initData.map(({ year, data: innerData }, index) => ({
     name: year,
     mes: innerData.map(({ mes }) => mes),
     data: innerData.map(({ monto }) => monto),
@@ -71,15 +71,15 @@ export const fetchTradedAmounts = () => dispatch => {
 
   const jsonArray = arrayAmounts.map((item, index) =>
     item.data.map((e, index) => ({
-      year: item.name,
+      anual: item.name,
       mes: item.mes[index],
       monto: item.data[index],
       montoAcumulado: item.montoAcumulado[index]
     }))
   )
   const newArray = [].concat.apply([], jsonArray)
+  const categories = Object.keys(newArray[0])
 
-  batch(() => {
-    dispatch(onTradedAmountSuccess(arrayAmounts, newArray))
-  })
+  const payload = { chartStructure: arrayAmounts, csvStructure: newArray, csvLabels: categories }
+  dispatch(onTradedAmountSuccess(payload))
 }

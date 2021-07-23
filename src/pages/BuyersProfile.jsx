@@ -1,7 +1,7 @@
 import React from 'react'
 
 // Containers
-import TradedAmounts from '../containers/BuyersProfile/TradedAmounts.container'
+import TradedAmounts from '../containers/TradedAmounts/TradedAmounts.container'
 
 const BuyersProfile = () => {
   return (

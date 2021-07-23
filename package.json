@@ -63,7 +63,7 @@
     "redux-devtools-extension": "^2.13.8"
   },
   "main": "./src/index.jsx",
-  "name": "frontend-boilerplate",
+  "name": "front-datos-abiertos",
   "private": true,
   "scripts": {
     "build": "./node_modules/.bin/craco build",

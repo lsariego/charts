@@ -26,7 +26,3 @@ body {
   top: 0;
   width: 100%;
 }
-
-.highcharts-credits, .highcharts-legend-item{
-  display: none!important;
-}

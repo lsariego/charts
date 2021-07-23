@@ -2,6 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { BaseLabel, ColorLabel } from './InfoLabel.styles'
 
+/**
+ * The InfoLabel's component.
+ */
 const InfoLabel = props => {
   const { label, color } = props
 

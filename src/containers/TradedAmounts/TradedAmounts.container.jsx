@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Container, Grid, Box } from '@material-ui/core'
+import { Container as Wrapper, Grid, Box } from '@material-ui/core'
 import formatNumber from '../../modules/utils/format-number'
 import InfoLabel from '../../components/Labels/InfoLabel'
 import LineChart from '../../components/Charts/LineChart'
@@ -12,11 +12,12 @@ import { useSelect } from '../../components/Inputs/Inputs.hooks'
 import Select from '../../components/Inputs/Select'
 import Pagination from '../../components/Pagination/Pagination'
 import IconButton from '../../components/Buttons/IconButton'
-import { fetchTradedAmounts } from '../BuyersProfile/TradedAmounts.actions'
+import { onTradedAmountThunk } from './TradedAmounts.actions'
 
 const TradedAmounts = () => {
   // Toggle Between Chart / Table //
   const [showTable, setShowTable] = useState(false)
+  const handleShowTable = updatedValue => () => setShowTable(updatedValue)
 
   // Const for Selects //
   const years = [
@@ -34,20 +35,23 @@ const TradedAmounts = () => {
   })
   const { value: distValue, onChange: handleDistribution } = useSelect({ initialValue: 1 })
 
+  const inputLineChart = useRef()
+
   // Table's Pagination //
   const [currentPage, setCurrentPage] = useState(1)
 
   // Load Data //
   const dispatch = useDispatch()
-  const { data } = useSelector(state => state.tradedAmount)
-  const { json } = useSelector(state => state.tradedAmount)
+  const { chartStructure } = useSelector(state => state.tradedAmount.data)
+  const { csvStructure } = useSelector(state => state.tradedAmount.data)
+  const { csvLabels } = useSelector(state => state.tradedAmount.data)
 
   useEffect(() => {
-    dispatch(fetchTradedAmounts())
+    dispatch(onTradedAmountThunk())
   }, [])
 
   return (
-    <Container>
+    <Wrapper>
       <Grid container>
         <Grid item xs={12} lg={10}>
           <h2>Montos transados</h2>
@@ -76,21 +80,17 @@ const TradedAmounts = () => {
             <IconButton
               type="toggleChart"
               variant="outlined"
-              singleIcn
+              singleIcon
               margin="0 10px 0 0"
               disabled={!showTable}
-              onClick={() => {
-                setShowTable(false)
-              }}
+              onClick={handleShowTable(false)}
             />
             <IconButton
               type="toggleTable"
               variant="outlined"
-              singleIcn
+              singleIcon
               disabled={showTable}
-              onClick={() => {
-                setShowTable(true)
-              }}
+              onClick={handleShowTable(true)}
             />
           </Box>
         </Grid>
@@ -109,13 +109,13 @@ const TradedAmounts = () => {
                   </TableRow>
                 }
               >
-                {data.slice(currentPage - 1, currentPage).map((e, index) =>
-                  e.data.map((x, index) => (
+                {chartStructure.slice(currentPage - 1, currentPage).map(yearItem =>
+                  yearItem.data.map((monthItem, index) => (
                     <TableRow key={index} backgroundColor={index % 2 === 0 ? 'gray3' : null}>
-                      <TableCell padding="10">{e.name}</TableCell>
-                      <TableCell>{e.mes[index]}</TableCell>
-                      <TableCell>${formatNumber(e.data[index])}</TableCell>
-                      <TableCell>${formatNumber(e.montoAcumulado[index])}</TableCell>
+                      <TableCell padding="10">{yearItem.name}</TableCell>
+                      <TableCell>{yearItem.mes[index]}</TableCell>
+                      <TableCell>${formatNumber(yearItem.data[index])}</TableCell>
+                      <TableCell>${formatNumber(yearItem.montoAcumulado[index])}</TableCell>
                     </TableRow>
                   ))
                 )}
@@ -123,7 +123,12 @@ const TradedAmounts = () => {
             </Grid>
             <Grid container justify="flex-end">
               <Box my={3}>
-                <Pagination size="small" page={currentPage} count={data.length} setCurrentPage={setCurrentPage} />
+                <Pagination
+                  size="small"
+                  page={currentPage}
+                  count={chartStructure.length}
+                  setCurrentPage={setCurrentPage}
+                />
               </Box>
             </Grid>
           </>
@@ -132,16 +137,22 @@ const TradedAmounts = () => {
             <Box mb={3}>
               <InfoLabel label="Valores en millones (CLP)" />
             </Box>
-            <LineChart data={data} />
+            <LineChart chartStructure={chartStructure} inputLineChart={inputLineChart} />
           </Grid>
         )}
       </Grid>
       <Grid>
         <Box mt={2}>
-          <Infobar showTable={showTable} csv={json} chart="exportLineChart" />
+          <Infobar
+            showTable={showTable}
+            data={csvStructure}
+            labels={csvLabels}
+            imgButton={inputLineChart}
+            chart="exportLineChart"
+          />
         </Box>
       </Grid>
-    </Container>
+    </Wrapper>
   )
 }
 

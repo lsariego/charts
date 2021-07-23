@@ -5,7 +5,7 @@ import ImageIcon from '@material-ui/icons/Image'
 import BarChartIcon from '@material-ui/icons/BarChart'
 import TableChartOutlinedIcon from '@material-ui/icons/TableChartOutlined'
 
-export const QuestionIcn = styled.div`
+export const QuestionIcon = styled.div`
   color: ${props => props.theme.palette.blackGrayBrand.gray4};
   width: 16px;
   height: 16px;
@@ -26,7 +26,7 @@ export const QuestionIcn = styled.div`
   }
 `
 
-export const DownloadIcn = styled(GetAppIcon)`
+export const DownloadIcon = styled(GetAppIcon)`
   color: ${props => props.theme.palette.blackGrayBrand.gray4};
   width: 16px;
   height: 16px;
@@ -37,7 +37,7 @@ export const DownloadIcn = styled(GetAppIcon)`
   border: 1px solid ${props => props.theme.palette.blackGrayBrand.gray4};
 `
 
-export const ChartIcn = styled(ImageIcon)`
+export const ChartIcon = styled(ImageIcon)`
   color: ${props => props.theme.palette.blackGrayBrand.gray4};
   width: 16px;
   height: 16px;
@@ -48,14 +48,14 @@ export const ChartIcn = styled(ImageIcon)`
   border: 1px solid ${props => props.theme.palette.blackGrayBrand.gray4};
 `
 
-export const BarIcn = styled(BarChartIcon)`
+export const BarIcon = styled(BarChartIcon)`
   color: ${props => props.theme.palette.primary.main};
   width: 90%;
   margin: 0 auto;
   outline: none;
 `
 
-export const TableIcn = styled(TableChartOutlinedIcon)`
+export const TableIcon = styled(TableChartOutlinedIcon)`
   color: ${props => props.theme.palette.primary.main};
   width: 90%;
   margin: 0 auto;
@@ -125,7 +125,7 @@ export const OutlinedButton = styled(BaseIconButton)`
   border-radius: 0.25rem;
   width: 36px;
   height: 36px;
-  color: ${({ color, disabled, theme }) =>
+  color: ${({ disabled, theme }) =>
     disabled ? theme.palette.blackGrayBrand.white : theme.palette.blackGrayBrand.gray4};
   text-transform: uppercase;
 `
@@ -133,7 +133,7 @@ export const OutlinedButton = styled(BaseIconButton)`
 export const TextButton = styled(BaseIconButton)`
   background-color: 'transparent';
   border: none;
-  color: ${({ color, disabled, theme }) =>
+  color: ${({ disabled, theme }) =>
     disabled ? theme.palette.blackGrayBrand.white : theme.palette.blackGrayBrand.gray4};
   text-transform: uppercase;
 `

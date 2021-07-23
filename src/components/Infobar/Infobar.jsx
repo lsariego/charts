@@ -5,15 +5,17 @@ import { Root } from '../Infobar/Infobar.styles'
 import IconButton from '../Buttons/IconButton'
 import ReactExport from 'react-export-excel'
 
-const Infobar = ({ chart, csv, showTable }) => {
+/**
+ * The Infobar's component.
+ */
+const Infobar = ({ data, labels, imgButton, showTable }) => {
   const convertToImg = () => {
-    document.getElementById(chart).click()
+    imgButton.current.click()
   }
 
   const ExcelFile = ReactExport.ExcelFile
   const ExcelSheet = ReactExport.ExcelSheet
   const ExcelColumn = ReactExport.ExcelColumn
-
   return (
     <>
       <Root>
@@ -26,17 +28,16 @@ const Infobar = ({ chart, csv, showTable }) => {
               <IconButton type="question">Aprende a leer el gráfico</IconButton>
             </Grid>
             <Grid item xs={4} align="right">
-              <IconButton type="chart" onClick={() => convertToImg()} disabled={showTable}>
+              <IconButton type="chart" onClick={convertToImg} disabled={showTable}>
                 Guardar Gráfico
               </IconButton>
             </Grid>
             <Grid item xs={4} align="right">
               <ExcelFile element={<IconButton type="download">Descargar Datos</IconButton>} filename="Chilecompra">
-                <ExcelSheet data={csv} name="Montos transados">
-                  <ExcelColumn label="Año" value="year" />
-                  <ExcelColumn label="Mes" value="mes" />
-                  <ExcelColumn label="Monto" value="monto" />
-                  <ExcelColumn label="Monto Transado" value="montoAcumulado" />
+                <ExcelSheet data={data} name="Chilecompra">
+                  {labels.map((column, index) => (
+                    <ExcelColumn key={index} label={column} value={column} />
+                  ))}
                 </ExcelSheet>
               </ExcelFile>
             </Grid>
@@ -48,9 +49,17 @@ const Infobar = ({ chart, csv, showTable }) => {
 }
 
 Infobar.propTypes = {
-  chart: PropTypes.string.isRequired,
+  imgButton: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
   showTable: PropTypes.bool,
-  csv: PropTypes.array
+  labels: PropTypes.arrayOf(PropTypes.string),
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      anual: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      mes: PropTypes.number.isRequired,
+      monto: PropTypes.number.isRequired,
+      montoAcumulado: PropTypes.string.isRequired
+    }).isRequired
+  ).isRequired
 }
 
 export default Infobar

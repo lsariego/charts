@@ -7,7 +7,7 @@ import { Root } from './Table.styles'
  * The Table's component.
  */
 const Table = props => {
-  const { accessibility, children = null, head, margin, borderCollapse, borderSpacing, id } = props
+  const { accessibility, children = null, head, margin, borderCollapse, borderSpacing } = props
 
   return (
     <Root
@@ -15,7 +15,6 @@ const Table = props => {
       margin={margin}
       borderCollapse={borderCollapse}
       borderSpacing={borderSpacing}
-      id={id}
     >
       {head && <TableHead>{head}</TableHead>}
       <TableBody>{children}</TableBody>
@@ -37,7 +36,6 @@ Table.propTypes = {
     label: PropTypes.string
   }),
   children: PropTypes.node,
-  id: PropTypes.string,
   head: PropTypes.node,
   margin: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   borderCollapse: PropTypes.string,

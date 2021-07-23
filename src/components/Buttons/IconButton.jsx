@@ -1,12 +1,20 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { TextButton, OutlinedButton, DownloadIcn, QuestionIcn, ChartIcn, BarIcn, TableIcn } from './IconButton.styles'
+import {
+  TextButton,
+  OutlinedButton,
+  DownloadIcon,
+  QuestionIcon,
+  ChartIcon,
+  BarIcon,
+  TableIcon
+} from './IconButton.styles'
 
 /**
  * The Icon Button's component.
  */
 const IconButton = props => {
-  const { children, color, disabled, type, size, variant, margin, width, onClick, singleIcn } = props
+  const { children, color, disabled, type, size, variant, margin, width, onClick, singleIcon } = props
   const BaseLinkButton = useMemo(() => {
     if (variant === 'outlined') {
       return OutlinedButton
@@ -23,19 +31,19 @@ const IconButton = props => {
       margin={margin}
       variant={variant}
       width={width}
-      className={singleIcn ? 'singleBtn' : null}
+      className={singleIcon ? 'singleBtn' : null}
       onClick={onClick}
     >
       {type === 'download' ? (
-        <DownloadIcn />
+        <DownloadIcon />
       ) : type === 'question' ? (
-        <QuestionIcn />
+        <QuestionIcon />
       ) : type === 'chart' ? (
-        <ChartIcn />
+        <ChartIcon />
       ) : type === 'toggleChart' ? (
-        <BarIcn />
+        <BarIcon />
       ) : type === 'toggleTable' ? (
-        <TableIcn />
+        <TableIcon />
       ) : null}
       {children}
     </BaseLinkButton>
@@ -51,7 +59,7 @@ const IconButton = props => {
 IconButton.defaultProps = {
   color: 'default',
   disabled: false,
-  singleIcn: false,
+  singleIcon: false,
   type: 'default',
   size: 'medium',
   variant: 'text',
@@ -60,7 +68,7 @@ IconButton.defaultProps = {
 }
 IconButton.propTypes = {
   children: PropTypes.node,
-  singleIcn: PropTypes.bool,
+  singleIcon: PropTypes.bool,
   type: PropTypes.oneOf(['default', 'download', 'question', 'chart', 'toggleChart', 'toggleTable']),
   color: PropTypes.oneOf(['default', 'primary', 'success', 'error', 'warning', 'info']),
   disabled: PropTypes.bool,

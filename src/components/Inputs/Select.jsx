@@ -1,17 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import Checkbox from './CheckBox'
 import {
   BaseInput,
   BaseSelect,
+  BottomMessage,
   DropDown,
   DropDownIcon,
-  ItemCheckBox,
   Error,
+  Info,
   Label,
   Option,
   OptionContent,
   Placeholder,
-  RequiredIcon,
+  Required,
   Root,
   Wrapper
 } from './Select.styles'
@@ -28,6 +30,8 @@ const Select = props => {
     margin,
     maxWidth,
     options,
+    info,
+    width,
     padding,
     placeholder,
     required,
@@ -45,11 +49,11 @@ const Select = props => {
   const showPlaceholder = placeholder !== '' && !value && value !== 0
 
   return (
-    <Root margin={margin} padding={padding}>
+    <Root margin={margin} padding={padding} width={width}>
       {label && (
         <Label>
           {`${label} `}
-          {required && <RequiredIcon className="fas fa-asterisk" />}
+          {required && <Required />}
         </Label>
       )}
       <Wrapper>
@@ -77,14 +81,20 @@ const Select = props => {
         >
           {options.map(option => (
             <Option disableGutters key={option.value} value={option.value}>
-              {multiple ? <ItemCheckBox color="primary" checked={value.indexOf(option.value) > -1} /> : null}
-              <OptionContent title={option.name}>{option.name}</OptionContent>
+              {multiple ? (
+                <Checkbox label={option.name} checked={value.indexOf(option.value) > -1} />
+              ) : (
+                <OptionContent title={option.name}>{option.name}</OptionContent>
+              )}
             </Option>
           ))}
         </BaseSelect>
         {showPlaceholder && <Placeholder>{placeholder}</Placeholder>}
       </Wrapper>
-      <Error>{error}</Error>
+      <BottomMessage>
+        {!error && <Info>{info}</Info>}
+        {error && <Error>{error}</Error>}
+      </BottomMessage>
     </Root>
   )
 }
@@ -94,11 +104,13 @@ Select.defaultProps = {
   error: '',
   multiple: false,
   label: '',
+  loading: false,
   margin: 0,
   maxWidth: 'initial',
   padding: 0,
   placeholder: 'Seleccione...',
   required: false,
+  textAlign: 'initial',
   type: 'text',
   onChange: () => undefined
 }
@@ -107,8 +119,10 @@ Select.propTypes = {
   error: PropTypes.string,
   multiple: PropTypes.bool,
   label: PropTypes.string,
+  info: PropTypes.string,
   margin: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
   maxWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
   options: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
