@@ -87,6 +87,12 @@ const theme = createMuiTheme({
         main: '#888888',
         hover: '#044076'
       }
+    },
+    lineCharts: {
+      bondiBlue: '#0097A7',
+      saffron: '#FBC02D',
+      tangerine: '#F57C00',
+      cinnabar: '#E64A19'
     }
   },
   typography: {

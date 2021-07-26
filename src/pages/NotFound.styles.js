@@ -12,7 +12,7 @@ export const Root = styled.div`
 `
 
 export const Text = styled.h3`
-  color: ${props => props.theme.palette.pickledBlueWood};
+  color: ${props => props.theme.palette.brand.pickledBlueWood};
   font-size: 22px;
   line-height: 26px;
   font-weight: ${props => props.theme.fontWeights[300]};

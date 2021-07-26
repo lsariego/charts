@@ -1,13 +1,12 @@
-import React, { useRef, forwardRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { Box } from '@material-ui/core'
-import formatNumber from '../../modules/utils/format-number'
+import formatToAmount from '../../modules/utils/formatters'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import useLineChart from './LineChart.hooks'
-import { GlobalStyle } from './LineChart.styles'
-import { exportComponentAsJPEG } from 'react-component-export-image'
+import { GlobalStyle, BoxWrapper } from './LineChart.styles'
 import InfoLabel from '../Labels/InfoLabel'
+import exportToImage from '../../modules/utils/exportToImage'
 
 const LineChart = ({ chartStructure, inputLineChart }) => {
   const { serie: info, category: categories } = useLineChart(chartStructure)
@@ -41,7 +40,7 @@ const LineChart = ({ chartStructure, inputLineChart }) => {
       formatter() {
         return (
           '<strong>$' +
-          formatNumber(this.y) +
+          formatToAmount(this.y) +
           '</strong> transados durante el mes de ' +
           this.x +
           ' de ' +
@@ -64,40 +63,39 @@ const LineChart = ({ chartStructure, inputLineChart }) => {
     }
   }
 
-  const exportImage = () => {
-    exportComponentAsJPEG(componentRef)
+  const exportData = data => {
+    exportToImage(data)
   }
-
-  const ComponentToPrint = forwardRef((props, ref) => (
-    <div ref={ref}>
-      <HighchartsReact highcharts={Highcharts} options={options} />
-    </div>
-  ))
-
-  const componentRef = useRef()
 
   return (
     <>
       <GlobalStyle />
-      <ComponentToPrint ref={componentRef} />
-      <div onClick={exportImage} ref={inputLineChart} />
-      <Box mb={2}>
-        {info.map(item => (
-          <InfoLabel key={item.name} label={item.name} color={item.color} />
-        ))}
-      </Box>
+      <div id="lineChart">
+        <HighchartsReact highcharts={Highcharts} options={options} />
+        <div
+          onClick={() => {
+            exportData('lineChart')
+          }}
+          ref={inputLineChart}
+        />
+        <BoxWrapper mb={2}>
+          {info.map(item => (
+            <InfoLabel key={item.name} label={item.name} color={item.color} />
+          ))}
+        </BoxWrapper>
+      </div>
     </>
   )
 }
 
 LineChart.propTypes = {
-  inputLineChart: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
+  inputLineChart: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf('div') })]),
   chartStructure: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      mes: PropTypes.number.isRequired,
+      month: PropTypes.number.isRequired,
       data: PropTypes.number.isRequired,
-      montoAcumulado: PropTypes.string.isRequired
+      totalAmount: PropTypes.string.isRequired
     }).isRequired
   ).isRequired
 }

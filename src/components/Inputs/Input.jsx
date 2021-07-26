@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Skeleton from '../Placeholders/Skeleton'
-import { BaseInput, BottomMessage, Counter, Details, Error, Info, Label, Required, Root } from './Input.styles'
+import { BaseInput, Bottommessage, Counter, Details, Error, Info, Label, Required, Root } from './Input.styles'
 export { Prefix as InputPrefix, Suffix as InputSuffix } from './Input.styles'
 
 /**
@@ -67,10 +67,10 @@ const Input = props => {
         />
       )}
       <Details>
-        <BottomMessage>
+        <Bottommessage>
           {!error && <Info>{info}</Info>}
           {error && <Error>{error}</Error>}
-        </BottomMessage>
+        </Bottommessage>
         {showCounter && (
           <Counter>
             {value.length}/{maxCharactersForCounter}

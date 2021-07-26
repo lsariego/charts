@@ -70,7 +70,11 @@ stages:
       value: 'datosabiertos-dev.mercadopublico.cl'
     - name: appPath
       value: '/'
+<<<<<<< HEAD
     - name: ocpNamespace
+=======
+    - name: ocpNamonthpace
+>>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
       value: 'datos-abiertos-front-dev'
     - name: appSSLMercadopublico
       value: true
@@ -99,7 +103,11 @@ stages:
       value: 'datosabiertos-pre.mercadopublico.cl'
     - name: appPath
       value: '/'
+<<<<<<< HEAD
     - name: ocpNamespace
+=======
+    - name: ocpNamonthpace
+>>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
       value: 'datos-abiertos-front-pre'
     - name: appSSLMercadopublico
       value: true
@@ -128,7 +136,11 @@ stages:
       value: 'datosabiertos.mercadopublico.cl'
     - name: appPath
       value: '/'
+<<<<<<< HEAD
     - name: ocpNamespace
+=======
+    - name: ocpNamonthpace
+>>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
       value: 'datos-abiertos-front-prod'
     - name: appSSLMercadopublico
       value: true

@@ -105,7 +105,7 @@ export const BaseInput = styled(({ textAlign, ...props }) => <InputBase {...prop
   }
 `
 
-export const BottomMessage = styled.section`
+export const Bottommessage = styled.section`
   font-family: ${props => props.theme.typography.fontFamily};
   font-size: 12px;
   line-height: 14px;

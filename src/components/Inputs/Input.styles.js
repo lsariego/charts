@@ -86,7 +86,7 @@ export const BaseInput = styled(({ textAlign, ...props }) => <InputBase {...prop
   }
 
   &.Mui-disabled {
-    background-color: rgba(46, 91, 255, 0.05);
+    background-color: ${props => props.theme.palette.blackGrayBrand.gray3};
     border: 1px solid ${props => props.theme.palette.blackGrayBrand.gray1};
     color: ${props => props.theme.palette.blackGrayBrand.black3};
     cursor: not-allowed;
@@ -105,7 +105,7 @@ export const BaseInput = styled(({ textAlign, ...props }) => <InputBase {...prop
   }
 `
 
-export const BottomMessage = styled.section`
+export const Bottommessage = styled.section`
   font-family: ${props => props.theme.typography.fontFamily};
   font-size: 12px;
   line-height: 14px;

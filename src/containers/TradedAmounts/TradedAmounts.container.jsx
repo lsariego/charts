@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Container as Wrapper, Grid, Box } from '@material-ui/core'
-import formatNumber from '../../modules/utils/format-number'
+import { Wrapper, GridWrapper, BoxWrapper } from './TradedAmounts.styles'
+import Typography from '../../components/Basics/Typography'
+import formatToAmount from '../../modules/utils/formatters'
 import InfoLabel from '../../components/Labels/InfoLabel'
 import LineChart from '../../components/Charts/LineChart'
 import Table from '../../components/Tables/Table.jsx'
@@ -11,6 +12,7 @@ import Infobar from '../../components/Infobar/Infobar'
 import { useSelect } from '../../components/Inputs/Inputs.hooks'
 import Select from '../../components/Inputs/Select'
 import Pagination from '../../components/Pagination/Pagination'
+import { usePagination } from '../../components/Pagination/Pagination.hooks'
 import IconButton from '../../components/Buttons/IconButton'
 import { onTradedAmountThunk } from './TradedAmounts.actions'
 
@@ -26,25 +28,27 @@ const TradedAmounts = () => {
     { name: '2019', value: 2019 }
   ]
   const distribution = [
-    { name: 'Mes del año', value: 1 },
-    { name: 'Monto acumulado', value: 2 }
+    { name: 'mes del año', value: 1 },
+    { name: 'monto acumulado', value: 2 }
   ]
-  const { multiValue: yearsValue, onChange: handleChangeMultiple } = useSelect({
-    initialValue: [2021],
-    isMultiple: true
-  })
+  const { multipleValue: yearsValue, onChangeMultiple: handleChangeMultiple } = useSelect({ initialValue: [2021] })
   const { value: distValue, onChange: handleDistribution } = useSelect({ initialValue: 1 })
 
   const inputLineChart = useRef()
 
-  // Table's Pagination //
-  const [currentPage, setCurrentPage] = useState(1)
-
   // Load Data //
   const dispatch = useDispatch()
-  const { chartStructure } = useSelector(state => state.tradedAmount.data)
-  const { csvStructure } = useSelector(state => state.tradedAmount.data)
-  const { csvLabels } = useSelector(state => state.tradedAmount.data)
+  const {
+    data: { chartStructure, csvStructure }
+  } = useSelector(state => state.tradedAmount)
+
+  // Table's Pagination //
+  const rowsPerPage = 12
+  const { page, totalPages, onChangePage, onGetCurrentPage } = usePagination({
+    data: csvStructure.slice(1),
+    initialPage: 1,
+    rowsPerPage
+  })
 
   useEffect(() => {
     dispatch(onTradedAmountThunk())
@@ -52,31 +56,33 @@ const TradedAmounts = () => {
 
   return (
     <Wrapper>
-      <Grid container>
-        <Grid item xs={12} lg={10}>
-          <h2>Montos transados</h2>
+      <GridWrapper container>
+        <GridWrapper item xs={12} lg={10}>
+          <Typography variant="h2" fontWeight="bold">
+            Montos transados
+          </Typography>
           {setShowTable}
-          <p>
+          <Typography variant="body" margin="15px 0 0 0">
             Los montos transados por un organismo público se obtienen desde las órdenes de compra emitidas a través de
             Mercado Público.
             <br />
             <br />A continuación podrás conocer como se distribuyen los montos transados del organismo público por año.
-          </p>
-        </Grid>
-      </Grid>
-      <Grid container spacing={3} alignItems="center">
-        <Grid item xs={6} md={2}>
-          <Box mt={5}>
+          </Typography>
+        </GridWrapper>
+      </GridWrapper>
+      <GridWrapper container spacing={3} alignItems="center">
+        <GridWrapper item xs={6} md={2}>
+          <BoxWrapper mt={5}>
             <Select options={years} label="Año" multiple value={yearsValue} onChange={handleChangeMultiple} />
-          </Box>
-        </Grid>
-        <Grid item xs={6} md={2}>
-          <Box mt={5}>
+          </BoxWrapper>
+        </GridWrapper>
+        <GridWrapper item xs={6} md={2}>
+          <BoxWrapper mt={5}>
             <Select options={distribution} label="Distribución" value={distValue} onChange={handleDistribution} />
-          </Box>
-        </Grid>
-        <Grid container item xs={12} md={8} justify="flex-end">
-          <Box mt={8}>
+          </BoxWrapper>
+        </GridWrapper>
+        <GridWrapper container item xs={12} md={8} justify="flex-end">
+          <BoxWrapper mt={8}>
             <IconButton
               type="toggleChart"
               variant="outlined"
@@ -92,66 +98,53 @@ const TradedAmounts = () => {
               disabled={showTable}
               onClick={handleShowTable(true)}
             />
-          </Box>
-        </Grid>
+          </BoxWrapper>
+        </GridWrapper>
         {showTable ? (
           <>
-            <Grid item xs={12}>
+            <GridWrapper item xs={12}>
               <Table
                 head={
                   <TableRow>
                     <TableCell head padding="10">
                       Año
                     </TableCell>
-                    <TableCell head>Mes</TableCell>
-                    <TableCell head>Monto por Mes</TableCell>
-                    <TableCell head>Monto Acumulado</TableCell>
+                    <TableCell head>mes</TableCell>
+                    <TableCell head>monto por mes</TableCell>
+                    <TableCell head>monto acumulado</TableCell>
                   </TableRow>
                 }
               >
-                {chartStructure.slice(currentPage - 1, currentPage).map(yearItem =>
-                  yearItem.data.map((monthItem, index) => (
-                    <TableRow key={index} backgroundColor={index % 2 === 0 ? 'gray3' : null}>
-                      <TableCell padding="10">{yearItem.name}</TableCell>
-                      <TableCell>{yearItem.mes[index]}</TableCell>
-                      <TableCell>${formatNumber(yearItem.data[index])}</TableCell>
-                      <TableCell>${formatNumber(yearItem.montoAcumulado[index])}</TableCell>
-                    </TableRow>
-                  ))
-                )}
+                {onGetCurrentPage().map((yearItem, index) => (
+                  <TableRow key={index} backgroundColor={index % 2 === 0 ? 'gray3' : null}>
+                    <TableCell padding="10">{yearItem[0]}</TableCell>
+                    <TableCell>{yearItem[1]}</TableCell>
+                    <TableCell>${formatToAmount(yearItem[2])}</TableCell>
+                    <TableCell>${formatToAmount(yearItem[3])}</TableCell>
+                  </TableRow>
+                ))}
               </Table>
-            </Grid>
-            <Grid container justify="flex-end">
-              <Box my={3}>
-                <Pagination
-                  size="small"
-                  page={currentPage}
-                  count={chartStructure.length}
-                  setCurrentPage={setCurrentPage}
-                />
-              </Box>
-            </Grid>
+            </GridWrapper>
+            <GridWrapper container justify="flex-end">
+              <BoxWrapper my={3}>
+                <Pagination size="small" count={totalPages} page={page} onChange={onChangePage} />
+              </BoxWrapper>
+            </GridWrapper>
           </>
         ) : (
-          <Grid item xs={12}>
-            <Box mb={3}>
+          <GridWrapper item xs={12}>
+            <BoxWrapper mb={3}>
               <InfoLabel label="Valores en millones (CLP)" />
-            </Box>
+            </BoxWrapper>
             <LineChart chartStructure={chartStructure} inputLineChart={inputLineChart} />
-          </Grid>
+          </GridWrapper>
         )}
-      </Grid>
-      <Grid>
-        <Box mt={2}>
-          <Infobar
-            showTable={showTable}
-            data={csvStructure}
-            labels={csvLabels}
-            imgButton={inputLineChart}
-            chart="exportLineChart"
-          />
-        </Box>
-      </Grid>
+      </GridWrapper>
+      <GridWrapper>
+        <BoxWrapper mt={2}>
+          <Infobar showTable={showTable} data={csvStructure} imgButton={inputLineChart} />
+        </BoxWrapper>
+      </GridWrapper>
     </Wrapper>
   )
 }

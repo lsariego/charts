@@ -3,7 +3,6 @@ import styled from 'styled-components'
 export const BaseLabel = styled.div`
   display: inline-block;
   zoom: 1;
-  *display: inline;
   font-size: 12px;
   margin: 0 0 0 25px;
   line-height: 22px;
@@ -12,7 +11,7 @@ export const BaseLabel = styled.div`
     margin-left: 0;
   }
 `
-export const ColorLabel = styled.div`
+export const ColorLabel = styled.span`
   float: left;
   margin-right: 5px;
   width: 22px;

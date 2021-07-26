@@ -1,9 +1,9 @@
 import { makeActionCreator } from '../../config/store/utils'
 
-export const TRADEDAMOUNT_START = 'TRADEDAMOUNT'
+export const TRADEDAMOUNT_START = 'TRADEDAMOUNT_START'
 export const TRADEDAMOUNT_ERROR = 'TRADEDAMOUNT_ERROR'
 export const TRADEDAMOUNT_SUCCESS = 'TRADEDAMOUNT_SUCCESS'
-export const onTradedAmount = makeActionCreator(TRADEDAMOUNT_START)
+export const onTradedAmountStart = makeActionCreator(TRADEDAMOUNT_START)
 export const onTradedAmountError = makeActionCreator(TRADEDAMOUNT_ERROR)
 export const onTradedAmountSuccess = makeActionCreator(TRADEDAMOUNT_SUCCESS, 'payload')
 
@@ -13,73 +13,74 @@ export const onTradedAmountThunk = () => dispatch => {
     {
       year: 2021,
       data: [
-        { mes: 'Enero', monto: 5000000, montoAcumulado: 5000000 },
-        { mes: 'Febrero', monto: 3500000, montoAcumulado: 8500000 },
-        { mes: 'Marzo', monto: 15000000, montoAcumulado: 23500000 },
-        { mes: 'Abril', monto: 5000000, montoAcumulado: 28500000 },
-        { mes: 'Mayo', monto: 3500000, montoAcumulado: 31500000 },
-        { mes: 'Junio', monto: 15000000, montoAcumulado: 46500000 },
-        { mes: 'Julio', monto: 13000000, montoAcumulado: 49500000 },
-        { mes: 'Agosto', monto: 20000000, montoAcumulado: 69500000 },
-        { mes: 'Septiembre', monto: 12000000, montoAcumulado: 81500000 },
-        { mes: 'Octubre', monto: 11000000, montoAcumulado: 92500000 },
-        { mes: 'Noviembre', monto: 12000000, montoAcumulado: 104500000 },
-        { mes: 'Diciembre', monto: 14000000, montoAcumulado: 128500000 }
+        { month: 'Enero', amount: 5000000, totalAmount: 5000000 },
+        { month: 'Febrero', amount: 3500000, totalAmount: 8500000 },
+        { month: 'Marzo', amount: 15000000, totalAmount: 23500000 },
+        { month: 'Abril', amount: 5000000, totalAmount: 28500000 },
+        { month: 'Mayo', amount: 3500000, totalAmount: 31500000 },
+        { month: 'Junio', amount: 15000000, totalAmount: 46500000 },
+        { month: 'Julio', amount: 13000000, totalAmount: 49500000 },
+        { month: 'Agosto', amount: 20000000, totalAmount: 69500000 },
+        { month: 'Septiembre', amount: 12000000, totalAmount: 81500000 },
+        { month: 'Octubre', amount: 11000000, totalAmount: 92500000 },
+        { month: 'Noviembre', amount: 12000000, totalAmount: 104500000 },
+        { month: 'Diciembre', amount: 14000000, totalAmount: 128500000 }
       ]
     },
     {
       year: 2020,
       data: [
-        { mes: 'Enero', monto: 3000000, montoAcumulado: 3000000 },
-        { mes: 'Febrero', monto: 2500000, montoAcumulado: 5500000 },
-        { mes: 'Marzo', monto: 7000000, montoAcumulado: 12500000 },
-        { mes: 'Abril', monto: 4500000, montoAcumulado: 17000000 },
-        { mes: 'Mayo', monto: 3000000, montoAcumulado: 47000000 },
-        { mes: 'Junio', monto: 9000000, montoAcumulado: 58000000 },
-        { mes: 'Julio', monto: 12000000, montoAcumulado: 70000000 },
-        { mes: 'Agosto', monto: 10000000, montoAcumulado: 80000000 },
-        { mes: 'Septiembre', monto: 8000000, montoAcumulado: 88000000 },
-        { mes: 'Octubre', monto: 5000000, montoAcumulado: 93000000 },
-        { mes: 'Noviembre', monto: 16000000, montoAcumulado: 109000000 },
-        { mes: 'Diciembre', monto: 20000000, montoAcumulado: 129000000 }
+        { month: 'Enero', amount: 3000000, totalAmount: 3000000 },
+        { month: 'Febrero', amount: 2500000, totalAmount: 5500000 },
+        { month: 'Marzo', amount: 7000000, totalAmount: 12500000 },
+        { month: 'Abril', amount: 4500000, totalAmount: 17000000 },
+        { month: 'Mayo', amount: 3000000, totalAmount: 47000000 },
+        { month: 'Junio', amount: 9000000, totalAmount: 58000000 },
+        { month: 'Julio', amount: 12000000, totalAmount: 70000000 },
+        { month: 'Agosto', amount: 10000000, totalAmount: 80000000 },
+        { month: 'Septiembre', amount: 8000000, totalAmount: 88000000 },
+        { month: 'Octubre', amount: 5000000, totalAmount: 93000000 },
+        { month: 'Noviembre', amount: 16000000, totalAmount: 109000000 },
+        { month: 'Diciembre', amount: 20000000, totalAmount: 129000000 }
       ]
     },
     {
       year: 2019,
       data: [
-        { mes: 'Enero', monto: 2000000, montoAcumulado: 2000000 },
-        { mes: 'Febrero', monto: 1500000, montoAcumulado: 3500000 },
-        { mes: 'Marzo', monto: 5000000, montoAcumulado: 8500000 },
-        { mes: 'Abril', monto: 8500000, montoAcumulado: 17000000 },
-        { mes: 'Mayo', monto: 1200000, montoAcumulado: 29000000 },
-        { mes: 'Junio', monto: 15000000, montoAcumulado: 44000000 },
-        { mes: 'Julio', monto: 10000000, montoAcumulado: 54000000 },
-        { mes: 'Agosto', monto: 15000000, montoAcumulado: 69000000 },
-        { mes: 'Septiembre', monto: 11000000, montoAcumulado: 80000000 },
-        { mes: 'Octubre', monto: 7000000, montoAcumulado: 87000000 },
-        { mes: 'Noviembre', monto: 15500000, montoAcumulado: 102500000 },
-        { mes: 'Diciembre', monto: 10000000, montoAcumulado: 112500000 }
+        { month: 'Enero', amount: 2000000, totalAmount: 2000000 },
+        { month: 'Febrero', amount: 1500000, totalAmount: 3500000 },
+        { month: 'Marzo', amount: 5000000, totalAmount: 8500000 },
+        { month: 'Abril', amount: 8500000, totalAmount: 17000000 },
+        { month: 'Mayo', amount: 1200000, totalAmount: 29000000 },
+        { month: 'Junio', amount: 15000000, totalAmount: 44000000 },
+        { month: 'Julio', amount: 10000000, totalAmount: 54000000 },
+        { month: 'Agosto', amount: 15000000, totalAmount: 69000000 },
+        { month: 'Septiembre', amount: 11000000, totalAmount: 80000000 },
+        { month: 'Octubre', amount: 7000000, totalAmount: 87000000 },
+        { month: 'Noviembre', amount: 15500000, totalAmount: 102500000 },
+        { month: 'Diciembre', amount: 10000000, totalAmount: 112500000 }
       ]
     }
   ]
   const arrayAmounts = initData.map(({ year, data: innerData }, index) => ({
     name: year,
-    mes: innerData.map(({ mes }) => mes),
-    data: innerData.map(({ monto }) => monto),
-    montoAcumulado: innerData.map(({ montoAcumulado }) => montoAcumulado)
+    month: innerData.map(({ month }) => month),
+    data: innerData.map(({ amount }) => amount),
+    totalAmount: innerData.map(({ totalAmount }) => totalAmount)
   }))
 
   const jsonArray = arrayAmounts.map((item, index) =>
     item.data.map((e, index) => ({
       anual: item.name,
-      mes: item.mes[index],
-      monto: item.data[index],
-      montoAcumulado: item.montoAcumulado[index]
+      month: item.month[index],
+      amount: item.data[index],
+      totalAmount: item.totalAmount[index]
     }))
   )
   const newArray = [].concat.apply([], jsonArray)
   const categories = Object.keys(newArray[0])
+  const cvsStructure = [categories, ...newArray.map(item => [item.anual, item.month, item.amount, item.totalAmount])]
 
-  const payload = { chartStructure: arrayAmounts, csvStructure: newArray, csvLabels: categories }
+  const payload = { chartStructure: arrayAmounts, csvStructure: cvsStructure }
   dispatch(onTradedAmountSuccess(payload))
 }

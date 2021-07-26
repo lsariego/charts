@@ -6,7 +6,7 @@ import { onUpdateGuest } from '../Header/Header.actions'
 import { useInput } from '../../components/Inputs/Inputs.hooks'
 import Button from '../../components/Buttons/Button'
 import Input from '../../components/Inputs/Input'
-import { ButtonWrapper, Form, Highlight, Message, Root, Separator, Title } from './Home.styles'
+import { ButtonWrapper, Form, Highlight, message, Root, Separator, Title } from './Home.styles'
 
 /**
  * The Home's container.
@@ -29,7 +29,7 @@ const Home = () => {
       </Title>
       {showForm && (
         <>
-          <Message>So... who are you?</Message>
+          <message>So... who are you?</message>
           <Form onSubmit={handleSubmit}>
             <Input autoFocus placeholder="I am" value={guestValue} onChange={handleChange} />
             <Separator />

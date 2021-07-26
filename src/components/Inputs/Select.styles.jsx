@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react'
 import styled from 'styled-components'
-import { InputBase, MenuItem, Select, Checkbox } from '@material-ui/core'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import { InputBase, MenuItem, Select } from '@material-ui/core'
+import { ExpandMore } from '@material-ui/icons'
 import { hexToRGBA } from '../../modules/utils/color'
 
 export const Root = styled.div`
@@ -149,7 +149,7 @@ export const DropDown = styled.section`
   user-select: none;
 `
 
-export const DropDownIcon = styled(ExpandMoreIcon)`
+export const DropDownIcon = styled(ExpandMore)`
   color: ${({ error, theme }) => (error ? theme.palette.error.main : theme.palette.blackGrayBrand.black3)};
   font-size: 24px;
   pointer-events: none;
@@ -193,7 +193,7 @@ export const OptionContent = styled.div`
   white-space: nowrap;
 `
 
-export const BottomMessage = styled.section`
+export const Bottommessage = styled.section`
   font-family: ${props => props.theme.typography.fontFamily};
   font-size: 12px;
   letter-spacing: 0;
@@ -209,16 +209,4 @@ export const Info = styled.section`
 
 export const Error = styled.section`
   color: ${props => props.theme.palette.error.main};
-`
-export const ItemCheckBox = styled(Checkbox)`
-  &.MuiCheckbox-root {
-    color: ${props => props.theme.palette.primary.main};
-  }
-  & .MuiSvgIcon-root {
-    width: 25px;
-    height: 25px;
-  }
-  &.Mui-checked {
-    color: ${props => props.theme.palette.primary.main};
-  }
 `

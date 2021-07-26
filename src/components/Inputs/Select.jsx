@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Checkbox from './CheckBox'
+import Skeleton from './../Placeholders/Skeleton'
 import {
   BaseInput,
   BaseSelect,
-  BottomMessage,
+  Bottommessage,
   DropDown,
   DropDownIcon,
   Error,
@@ -31,6 +32,7 @@ const Select = props => {
     maxWidth,
     options,
     info,
+    loading,
     width,
     padding,
     placeholder,
@@ -57,44 +59,47 @@ const Select = props => {
         </Label>
       )}
       <Wrapper>
-        <BaseSelect
-          multiple={multiple}
-          disabled={disabled}
-          error={Boolean(error)}
-          renderValue={multiple ? selected => selected.join(', ') : null}
-          IconComponent={() => (
-            <DropDown>
-              <DropDownIcon color="disabled" fontSize="small" />
-            </DropDown>
-          )}
-          input={<BaseInput />}
-          maxWidth={maxWidth}
-          MenuProps={{
-            anchorOrigin: { horizontal: 'left', vertical: 42 },
-            anchorReference: 'anchorEl',
-            getContentAnchorEl: null
-          }}
-          value={value}
-          onBlur={handleBlur}
-          onChange={onChange}
-          onClick={handleClick}
-        >
-          {options.map(option => (
-            <Option disableGutters key={option.value} value={option.value}>
-              {multiple ? (
-                <Checkbox label={option.name} checked={value.indexOf(option.value) > -1} />
-              ) : (
-                <OptionContent title={option.name}>{option.name}</OptionContent>
-              )}
-            </Option>
-          ))}
-        </BaseSelect>
+        {loading && <Skeleton variant="rect" height={38} />}
+        {!loading && (
+          <BaseSelect
+            multiple={multiple}
+            disabled={disabled}
+            error={Boolean(error)}
+            renderValue={multiple ? selected => selected.join(', ') : null}
+            IconComponent={() => (
+              <DropDown>
+                <DropDownIcon color="disabled" fontSize="small" />
+              </DropDown>
+            )}
+            input={<BaseInput />}
+            maxWidth={maxWidth}
+            MenuProps={{
+              anchorOrigin: { horizontal: 'left', vertical: 42 },
+              anchorReference: 'anchorEl',
+              getContentAnchorEl: null
+            }}
+            value={value}
+            onBlur={handleBlur}
+            onChange={onChange}
+            onClick={handleClick}
+          >
+            {options.map(option => (
+              <Option disableGutters key={option.value} value={option.value}>
+                {multiple ? (
+                  <Checkbox label={option.name} checked={value.indexOf(option.value) > -1} />
+                ) : (
+                  <OptionContent title={option.name}>{option.name}</OptionContent>
+                )}
+              </Option>
+            ))}
+          </BaseSelect>
+        )}
         {showPlaceholder && <Placeholder>{placeholder}</Placeholder>}
       </Wrapper>
-      <BottomMessage>
+      <Bottommessage>
         {!error && <Info>{info}</Info>}
         {error && <Error>{error}</Error>}
-      </BottomMessage>
+      </Bottommessage>
     </Root>
   )
 }
@@ -119,20 +124,25 @@ Select.propTypes = {
   error: PropTypes.string,
   multiple: PropTypes.bool,
   label: PropTypes.string,
+  loading: PropTypes.bool,
   info: PropTypes.string,
-  margin: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
-  maxWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
-  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
+  margin: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  maxWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   options: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
-      value: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array])
+      value: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
     })
   ).isRequired,
-  padding: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
+  padding: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   placeholder: PropTypes.string,
   required: PropTypes.bool,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array]).isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.arrayOf(PropTypes.shape({ value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]) }))
+  ]).isRequired,
   onChange: PropTypes.func
 }
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import theme from '../../config/styles/theme'
 
 /**
  * The LineChart's custom hook.
@@ -6,7 +7,12 @@ import { useEffect, useState } from 'react'
 const useLineChart = data => {
   const [serie, setSerie] = useState([])
   const [category, setCategory] = useState([])
-  const colors = ['#0097A7', '#FBC02D', '#F57C00', '#E64A19']
+  const colors = [
+    theme.palette.lineCharts.bondiBlue,
+    theme.palette.lineCharts.saffron,
+    theme.palette.lineCharts.tangerine,
+    theme.palette.lineCharts.cinnabar
+  ]
 
   useEffect(() => {
     const setData = () => {
@@ -14,7 +20,7 @@ const useLineChart = data => {
         ...item,
         color: colors[index]
       }))
-      const arrayCategories = arraySeries.map(item => item.mes)
+      const arrayCategories = arraySeries.map(item => item.month)
       const merged = [].concat.apply([], arrayCategories)
       const arrayMerged = merged.reduce(function (a, b) {
         if (a.indexOf(b) < 0) a.push(b)

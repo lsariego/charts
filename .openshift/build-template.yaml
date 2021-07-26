@@ -8,11 +8,19 @@ objects:
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftWebConsole
+<<<<<<< HEAD
     creationTimestamp: '2019-12-10T19:01:00Z'
     labels:
       app: ${APP_NAME}
     name: ${APP_NAME}
     namespace: ${APP_NAMESPACE}
+=======
+    creationTimonthtamp: '2019-12-10T19:01:00Z'
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+    namonthpace: ${APP_NAmonthPACE}
+>>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
   spec:
     nodeSelector: null
     output:
@@ -30,7 +38,11 @@ objects:
         from:
           kind: ImageStreamTag
           name: 'httpd:2.4'
+<<<<<<< HEAD
           namespace: openshift
+=======
+          namonthpace: openshift
+>>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
       type: Source
     triggers: []
   status: {}
@@ -50,5 +62,9 @@ parameters:
 - name: APP_NAME
   required: true
   value: "datos-abiertos-frontend"
+<<<<<<< HEAD
 - name: APP_NAMESPACE
+=======
+- name: APP_NAmonthPACE
+>>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
   required: true

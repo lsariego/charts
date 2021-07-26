@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 /**
  * The Pagination' custom hook.
  */
-export const usePagination = ({ data = [], initialPage = 1, rowsPerPage = 5 }) => {
+export const usePagination = ({ data = [], initialPage = 1, rowsPerPage = 12 }) => {
   const [page, setPage] = useState(initialPage)
 
   const handleChange = (_, newPage) => {

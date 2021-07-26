@@ -12,11 +12,11 @@ import {
  * The Pagination's component.
  */
 const Pagination = (
-  { defaultPage, page, variant, onChange, setCurrentPage, ...rest },
+  { defaultPage, page, variant, onChange, ...rest },
   {
     renderItem = item =>
       variant === 'classic' ? (
-        <ClassicPaginationItem shape="rounded" {...item} onClick={() => setCurrentPage(item.page)} />
+        <ClassicPaginationItem shape="rounded" {...item} />
       ) : (
         <>
           <Line />
@@ -51,7 +51,6 @@ Pagination.defaultProps = {
   variant: 'classic',
   getItemAriaLabel: () => undefined,
   onChange: () => undefined,
-  setCurrentPage: () => undefined,
   renderItem: item => <ClassicPaginationItem {...item} />
 }
 Pagination.propTypes = {
@@ -64,8 +63,7 @@ Pagination.propTypes = {
   variant: PropTypes.oneOf(['classic', 'expand']),
   getItemAriaLabel: PropTypes.func,
   onChange: PropTypes.func,
-  renderItem: PropTypes.func,
-  setCurrentPage: PropTypes.func
+  renderItem: PropTypes.func
 }
 
 export default Pagination
