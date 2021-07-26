@@ -1,0 +1,142 @@
+# Main pipeline for CI/CD process
+# Builds a Node.js project that uses React.
+# Deploys at Openshift platform.
+
+trigger:
+- master
+- development
+- pre-production
+
+variables: 
+- template: variables.yml
+
+stages:
+- stage: 'Build_App'
+  displayName: 'Build App'
+  jobs: 
+  - job: 'Build_Development'
+    displayName: 'Build Development'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/development'))
+    pool:
+      name: 'Hosted Linux Build MicroServices'
+      demands: npm
+    variables:
+    - group: 'DevelopmentStageReferences'
+    steps:
+      - download: none
+      - template: build-tasks.yml
+        parameters:
+          npmBuildArgument: $(npmBuild)
+  - job: 'Build_PreProduction'
+    displayName: 'Build PreProduction'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/pre-production'))
+    pool:
+      name: 'Hosted Linux Build MicroServices'
+      demands: npm
+    variables:
+    - group: 'PreProductionStageReferences'
+    steps:
+      - download: none
+      - template: build-tasks.yml
+        parameters:
+          npmBuildArgument: $(npmBuild)
+  - job: 'Build_Production'
+    displayName: 'Build Production'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    pool:
+      name: 'Hosted Linux Build MicroServices'
+      demands: npm
+    variables:
+    - group: 'ProductionStageReferences'
+    steps:
+      - download: none
+      - template: build-tasks.yml
+        parameters:
+          npmBuildArgument: $(npmBuild)
+        
+- stage: 'Development'
+  displayName: 'Deploy to the Development environment'
+  dependsOn: 'Build_App'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/development'))
+  jobs:
+  - deployment: Deploy
+    displayName: 'Deploy job'
+    pool:
+      name: 'Hosted Linux Build MicroServices'
+    environment: Development
+    variables:
+    - group: 'ReleaseReferences'
+    - name: appRoute
+      value: 'datosabiertos-dev.mercadopublico.cl'
+    - name: appPath
+      value: '/'
+    - name: ocpNamonthpace
+      value: 'datos-abiertos-front-dev'
+    - name: appSSLMercadopublico
+      value: true
+    - name: appSSLChilecompra
+      value: false   
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - download: none
+            - template: deploy-tasks.yml
+
+- stage: 'PreProduction'
+  displayName: 'Deploy to the PreProduction environment'
+  dependsOn: 'Build_App'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/pre-production'))
+  jobs:
+  - deployment: Deploy
+    displayName: 'Deploy job'
+    pool:
+      name: 'Hosted Linux Build MicroServices'
+    environment: PreProduction
+    variables:
+    - group: 'ReleaseReferences'
+    - name: appRoute
+      value: 'datosabiertos-pre.mercadopublico.cl'
+    - name: appPath
+      value: '/'
+    - name: ocpNamonthpace
+      value: 'datos-abiertos-front-pre'
+    - name: appSSLMercadopublico
+      value: true
+    - name: appSSLChilecompra
+      value: false   
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - download: none
+            - template: deploy-tasks.yml
+
+- stage: 'Production'
+  displayName: 'Deploy to the Production environment'
+  dependsOn: 'Build_App'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  jobs:
+  - deployment: Deploy
+    displayName: 'Deploy job'
+    pool:
+      name: 'Hosted Linux Build MicroServices'
+    environment: Production
+    variables:
+    - group: 'ReleaseReferences'
+    - name: appRoute
+      value: 'datosabiertos.mercadopublico.cl'
+    - name: appPath
+      value: '/'
+    - name: ocpNamonthpace
+      value: 'datos-abiertos-front-prod'
+    - name: appSSLMercadopublico
+      value: true
+    - name: appSSLChilecompra
+      value: false   
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - download: none
+            - template: deploy-tasks.yml

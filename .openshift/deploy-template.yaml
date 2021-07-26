@@ -1,0 +1,148 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: deploy-react-app
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimonthtamp: null
+    generation: 1
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+    namonthpace: ${APP_NAmonthPACE}
+  spec:
+    replicas: 1
+    selector:
+      app: ${APP_NAME}
+      deploymentconfig: ${APP_NAME}
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimonthtamp: null
+        labels:
+          app: ${APP_NAME}
+          deploymentconfig: ${APP_NAME}
+      spec:
+        containers:
+          - image: docker-registry.default.svc:5000/${APP_NAmonthPACE}/${APP_NAME}
+            imagePullPolicy: Always
+            name: ${APP_NAME}
+            ports:
+              - containerPort: 8080
+                protocol: TCP
+              - containerPort: 8443
+                protocol: TCP
+            resources: {}
+            terminationmessagePath: /dev/termination-log
+            terminationmessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNamonth:
+        - ${APP_NAME}
+        from:
+          kind: ImageStreamTag
+          name: ${APP_NAME}:latest
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+    namonthpace: ${APP_NAmonthPACE}
+  spec:
+    ports:
+      - name: 8080-tcp
+        port: 8080
+        protocol: TCP
+        targetPort: 8080
+    selector:
+      app: ${APP_NAME}
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    generation: 1
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+  spec:
+    lookupPolicy:
+      local: false
+  status: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+  spec:
+    port:
+      targetPort: 8080-tcp
+    tls:
+      termination: edge
+    to:
+      kind: Service
+      name: ${APP_NAME}
+      weight: 100
+    wildcardPolicy: None
+  status: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: ${APP_NAME}
+      mercadopublico: ${APP_SSL_MERCADOPUBLICO}
+      chilecompra: ${APP_SSL_CHILECOMPRA}
+    name: ${APP_NAME}-short
+  spec:
+    host: ${APP_ROUTE}
+    path: ${APP_PATH}
+    port:
+      targetPort: 8080-tcp
+    tls:
+      termination: edge
+    to:
+      kind: Service
+      name: ${APP_NAME}
+      weight: 100
+    wildcardPolicy: None
+  status: {}
+
+parameters:
+- name: APP_NAME
+  required: true
+  value: "datos-abiertos-frontend"
+- name: APP_ROUTE
+  required: true
+- name: APP_PATH
+  required: true
+- name: APP_NAmonthPACE
+  required: true
+- name: APP_SSL_MERCADOPUBLICO
+  required: true
+- name: APP_SSL_CHILECOMPRA
+  required: true
+  

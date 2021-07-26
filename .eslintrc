@@ -1,0 +1,25 @@
+{
+  "env": {
+    "browser": true,
+    "jest": true
+  },
+  "extends": [
+    "standard",
+    "standard-react",
+    "prettier/standard"
+  ],
+  "globals": {
+		"document": true,
+		"window": true
+  },
+  "parser": "babel-eslint",
+  "plugins": [
+    "standard",
+    "prettier"
+  ],
+  "rules": {
+    "jsx-quotes": ["error", "prefer-double"],
+    "quote-props": "off",
+    "space-before-function-paren": "off"
+  }
+}
