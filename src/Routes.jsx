@@ -1,3 +1,5 @@
+// TODO: Homepage component its active for later use (next Sprint) for actual Homepage
+
 import React from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import routes from './config/settings/routes'

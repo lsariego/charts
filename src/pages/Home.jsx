@@ -1,4 +1,4 @@
-// FIXME: This file is just an example, you can take it as reference to make your own.
+// TODO: Homepage component its active for later use (next Sprint) for actual Homepage
 
 import React from 'react'
 import BrandLayout from '../components/Layouts/BrandLayout'

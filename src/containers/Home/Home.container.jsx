@@ -1,4 +1,4 @@
-// FIXME: This file is just an example, you can take it as reference to make your own.
+// TODO: Homepage component and container its active for later use (next Sprint) for actual Homepage
 
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'

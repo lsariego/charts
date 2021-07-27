@@ -1,4 +1,4 @@
-// FIXME: This file is just an example, you can take it as reference to make your own.
+// TODO: Homepage component and reducer its active for later use (next Sprint) for actual Homepage
 
 import { HIDE_GUEST_FORM_SUCCESS, SHOW_GUEST_FORM_SUCCESS } from './Home.actions'
 

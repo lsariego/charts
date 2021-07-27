@@ -1,4 +1,4 @@
-// FIXME: This file is just an example, you can take it as reference to make your own.
+// TODO: Homepage component and actions its active for later use (next Sprint) for actual Homepage
 
 import { makeActionCreator } from '../../config/store/utils'
 
