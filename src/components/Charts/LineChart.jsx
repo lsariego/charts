@@ -81,8 +81,8 @@ const LineChart = ({ inputLineChartRef, categories, info }) => {
 }
 
 LineChart.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.shape(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))).isRequired,
-  info: PropTypes.arrayOf(PropTypes.shape(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])).isRequired,
+  info: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])).isRequired,
   inputLineChartRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(window.HTMLDivElement) })
