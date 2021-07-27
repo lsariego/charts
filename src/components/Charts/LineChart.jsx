@@ -3,14 +3,11 @@ import PropTypes from 'prop-types'
 import formatToAmount from '../../modules/utils/formatters'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import useLineChart from './LineChart.hooks'
 import { GlobalStyle, BoxWrapper } from './LineChart.styles'
 import InfoLabel from '../Labels/InfoLabel'
 import exportToImage from '../../modules/utils/exportToImage'
 
-const LineChart = ({ chartStructure, inputLineChart }) => {
-  const { serie: info, category: categories } = useLineChart(chartStructure)
-
+const LineChart = ({ inputLineChartRef, categories, info }) => {
   const options = {
     title: {
       text: ''
@@ -63,8 +60,8 @@ const LineChart = ({ chartStructure, inputLineChart }) => {
     }
   }
 
-  const exportData = data => {
-    exportToImage(data)
+  const exportData = () => {
+    exportToImage('lineChart')
   }
 
   return (
@@ -72,12 +69,7 @@ const LineChart = ({ chartStructure, inputLineChart }) => {
       <GlobalStyle />
       <div id="lineChart">
         <HighchartsReact highcharts={Highcharts} options={options} />
-        <div
-          onClick={() => {
-            exportData('lineChart')
-          }}
-          ref={inputLineChart}
-        />
+        <div onClick={exportData} ref={inputLineChartRef} />
         <BoxWrapper mb={2}>
           {info.map(item => (
             <InfoLabel key={item.name} label={item.name} color={item.color} />
@@ -89,15 +81,12 @@ const LineChart = ({ chartStructure, inputLineChart }) => {
 }
 
 LineChart.propTypes = {
-  inputLineChart: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf('div') })]),
-  chartStructure: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      month: PropTypes.number.isRequired,
-      data: PropTypes.number.isRequired,
-      totalAmount: PropTypes.string.isRequired
-    }).isRequired
-  ).isRequired
+  categories: PropTypes.arrayOf(PropTypes.shape(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))).isRequired,
+  info: PropTypes.arrayOf(PropTypes.shape(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))).isRequired,
+  inputLineChartRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(window.HTMLDivElement) })
+  ])
 }
 
 export default LineChart

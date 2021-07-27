@@ -2,14 +2,14 @@
 
 import { HIDE_GUEST_FORM_SUCCESS, SHOW_GUEST_FORM_SUCCESS } from './Home.actions'
 
-const homonthtate = {
+const homeState = {
   showForm: true
 }
 
 /**
  * The Home's reducer.
  */
-const homeReducer = (state = homonthtate, { type }) => {
+const homeReducer = (state = homeState, { type }) => {
   switch (type) {
     case HIDE_GUEST_FORM_SUCCESS: {
       return { ...state, showForm: false }

@@ -11,9 +11,9 @@ import exportToCsv from '../../modules/utils/exportToCsv'
 /**
  * The Infobar's component.
  */
-const Infobar = ({ data, imgButton, showTable }) => {
+const Infobar = ({ data, imgButtonRef, showTable }) => {
   const convertToImg = () => {
-    imgButton.current.click()
+    imgButtonRef.current.click()
   }
 
   const downloadCsv = () => {
@@ -51,7 +51,10 @@ const Infobar = ({ data, imgButton, showTable }) => {
 }
 
 Infobar.propTypes = {
-  imgButton: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.any })]),
+  imgButtonRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(window.HTMLButtonElement) })
+  ]),
   showTable: PropTypes.bool,
   data: PropTypes.arrayOf(
     PropTypes.shape({

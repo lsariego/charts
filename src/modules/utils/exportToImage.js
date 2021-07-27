@@ -4,7 +4,7 @@ import * as htmlToImage from 'html-to-image'
  */
 const exportToImage = chart => {
   htmlToImage
-    .toJpeg(document.getElementById('lineChart'), { backgroundColor: '#fff', quality: 0.95 })
+    .toJpeg(document.getElementById(chart), { backgroundColor: '#fff', quality: 0.95 })
     .then(function (dataUrl) {
       var link = document.createElement('a')
       link.download = 'chilecompra.jpeg'

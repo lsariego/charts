@@ -8,7 +8,7 @@ export const onTradedAmountError = makeActionCreator(TRADEDAMOUNT_ERROR)
 export const onTradedAmountSuccess = makeActionCreator(TRADEDAMOUNT_SUCCESS, 'payload')
 
 export const onTradedAmountThunk = () => dispatch => {
-  // Fake Data to load //
+  // TODO: Fake Data to load at the moment //
   const initData = [
     {
       year: 2021,
@@ -62,15 +62,15 @@ export const onTradedAmountThunk = () => dispatch => {
       ]
     }
   ]
-  const arrayAmounts = initData.map(({ year, data: innerData }, index) => ({
+  const arrayAmounts = initData.map(({ year, data: innerData }) => ({
     name: year,
     month: innerData.map(({ month }) => month),
     data: innerData.map(({ amount }) => amount),
     totalAmount: innerData.map(({ totalAmount }) => totalAmount)
   }))
 
-  const jsonArray = arrayAmounts.map((item, index) =>
-    item.data.map((e, index) => ({
+  const jsonArray = arrayAmounts.map(item =>
+    item.data.map((innerData, index) => ({
       anual: item.name,
       month: item.month[index],
       amount: item.data[index],
@@ -82,5 +82,12 @@ export const onTradedAmountThunk = () => dispatch => {
   const cvsStructure = [categories, ...newArray.map(item => [item.anual, item.month, item.amount, item.totalAmount])]
 
   const payload = { chartStructure: arrayAmounts, csvStructure: cvsStructure }
-  dispatch(onTradedAmountSuccess(payload))
+
+  try {
+    dispatch(onTradedAmountStart())
+    // TODO: Axios request to get result status and then compare result.status to dispatch Success or Error
+    dispatch(onTradedAmountSuccess(payload))
+  } catch (error) {
+    dispatch(onTradedAmountError(error))
+  }
 }

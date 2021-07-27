@@ -3,12 +3,12 @@
  *
  * Reference: https://redux.js.org/recipes/reducing-boilerplate#generating-action-creators
  */
-export const makeActionCreator = (type, ...argNamonth) => {
+export const makeActionCreator = (type, ...argNames) => {
   return (...args) => {
     const action = { type }
 
-    argNamonth.forEach((_, index) => {
-      action[argNamonth[index]] = args[index]
+    argNames.forEach((_, index) => {
+      action[argNames[index]] = args[index]
     })
 
     return action

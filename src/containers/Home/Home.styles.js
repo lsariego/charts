@@ -21,7 +21,7 @@ export const Highlight = styled.span`
   font-weight: 500;
 `
 
-export const message = styled.p`
+export const Message = styled.p`
   text-align: center;
   width: 100%;
 `

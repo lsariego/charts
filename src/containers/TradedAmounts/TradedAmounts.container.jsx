@@ -15,6 +15,7 @@ import Pagination from '../../components/Pagination/Pagination'
 import { usePagination } from '../../components/Pagination/Pagination.hooks'
 import IconButton from '../../components/Buttons/IconButton'
 import { onTradedAmountThunk } from './TradedAmounts.actions'
+import useLineChart from '../../components/Charts/LineChart.hooks'
 
 const TradedAmounts = () => {
   // Toggle Between Chart / Table //
@@ -34,7 +35,7 @@ const TradedAmounts = () => {
   const { multipleValue: yearsValue, onChangeMultiple: handleChangeMultiple } = useSelect({ initialValue: [2021] })
   const { value: distValue, onChange: handleDistribution } = useSelect({ initialValue: 1 })
 
-  const inputLineChart = useRef()
+  const inputLineChartRef = useRef()
 
   // Load Data //
   const dispatch = useDispatch()
@@ -49,6 +50,9 @@ const TradedAmounts = () => {
     initialPage: 1,
     rowsPerPage
   })
+
+  // LineChart Hook //
+  const { serie: info, category: categories } = useLineChart(chartStructure)
 
   useEffect(() => {
     dispatch(onTradedAmountThunk())
@@ -136,13 +140,13 @@ const TradedAmounts = () => {
             <BoxWrapper mb={3}>
               <InfoLabel label="Valores en millones (CLP)" />
             </BoxWrapper>
-            <LineChart chartStructure={chartStructure} inputLineChart={inputLineChart} />
+            <LineChart inputLineChartRef={inputLineChartRef} categories={categories} info={info} />
           </GridWrapper>
         )}
       </GridWrapper>
       <GridWrapper>
         <BoxWrapper mt={2}>
-          <Infobar showTable={showTable} data={csvStructure} imgButton={inputLineChart} />
+          <Infobar showTable={showTable} data={csvStructure} imgButtonRef={inputLineChartRef} />
         </BoxWrapper>
       </GridWrapper>
     </Wrapper>
