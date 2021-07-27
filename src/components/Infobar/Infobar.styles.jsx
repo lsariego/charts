@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Grid } from '@material-ui/core'
 
 export const Root = styled.div`
   flexgrow: 1;
@@ -16,3 +17,5 @@ export const Root = styled.div`
     margin: 0;
   }
 `
+
+export const GridWrapper = styled(Grid)``

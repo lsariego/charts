@@ -5,7 +5,7 @@ import Skeleton from './../Placeholders/Skeleton'
 import {
   BaseInput,
   BaseSelect,
-  Bottommessage,
+  BottomMessage,
   DropDown,
   DropDownIcon,
   Error,
@@ -96,10 +96,10 @@ const Select = props => {
         )}
         {showPlaceholder && <Placeholder>{placeholder}</Placeholder>}
       </Wrapper>
-      <Bottommessage>
+      <BottomMessage>
         {!error && <Info>{info}</Info>}
         {error && <Error>{error}</Error>}
-      </Bottommessage>
+      </BottomMessage>
     </Root>
   )
 }

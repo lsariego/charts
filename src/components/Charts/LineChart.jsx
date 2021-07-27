@@ -6,6 +6,7 @@ import HighchartsReact from 'highcharts-react-official'
 import { GlobalStyle, BoxWrapper } from './LineChart.styles'
 import InfoLabel from '../Labels/InfoLabel'
 import exportToImage from '../../modules/utils/exportToImage'
+import theme from '../../config/styles/theme'
 
 const LineChart = ({ inputLineChartRef, categories, info }) => {
   const options = {
@@ -52,7 +53,7 @@ const LineChart = ({ inputLineChartRef, categories, info }) => {
       series: {
         marker: {
           radius: 5,
-          fillColor: '#fff',
+          fillColor: theme.palette.blackGrayBrand.white,
           lineColor: null,
           lineWidth: 2
         }

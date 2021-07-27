@@ -1,4 +1,4 @@
-import { TRADEDAMOUNT_START, TRADEDAMOUNT_SUCCESS, TRADEDAMOUNT_ERROR } from './TradedAmounts.actions'
+import { TRADEDAMOUNT, TRADEDAMOUNT_SUCCESS, TRADEDAMOUNT_ERROR } from './TradedAmounts.actions'
 
 const initialState = {
   data: { chartStructure: [], csvStructure: [] },
@@ -10,16 +10,16 @@ const initialState = {
 /**
  * Traded Amount's reducer.
  */
-const TradedAmountReducer = (state = initialState, { payload, type, error }) => {
+const TradedAmountReducer = (state = initialState, { payload, type }) => {
   switch (type) {
-    case TRADEDAMOUNT_START: {
+    case TRADEDAMOUNT: {
       return { ...state, fetching: true }
     }
     case TRADEDAMOUNT_SUCCESS: {
       return { ...state, data: payload, fetching: false, fetched: true }
     }
     case TRADEDAMOUNT_ERROR: {
-      return { ...state, error: error }
+      return { ...state, error: payload.error }
     }
     default: {
       return state

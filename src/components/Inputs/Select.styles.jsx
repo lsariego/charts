@@ -27,9 +27,6 @@ export const Required = styled(({ ...props }) => <span {...props}>*</span>)`
   color: ${props => props.theme.palette.blackGrayBrand.black3};
   font-size: 1rem;
 `
-export const RequiredIcon = styled.i`
-  color: ${props => props.theme.palette.custom.baliHai};
-`
 
 export const Wrapper = styled.section`
   position: relative;
@@ -193,7 +190,7 @@ export const OptionContent = styled.div`
   white-space: nowrap;
 `
 
-export const Bottommessage = styled.section`
+export const BottomMessage = styled.section`
   font-family: ${props => props.theme.typography.fontFamily};
   font-size: 12px;
   letter-spacing: 0;

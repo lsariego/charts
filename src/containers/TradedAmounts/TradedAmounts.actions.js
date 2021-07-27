@@ -1,10 +1,10 @@
 import { makeActionCreator } from '../../config/store/utils'
 
-export const TRADEDAMOUNT_START = 'TRADEDAMOUNT_START'
+export const TRADEDAMOUNT = 'TRADEDAMOUNT'
 export const TRADEDAMOUNT_ERROR = 'TRADEDAMOUNT_ERROR'
 export const TRADEDAMOUNT_SUCCESS = 'TRADEDAMOUNT_SUCCESS'
-export const onTradedAmountStart = makeActionCreator(TRADEDAMOUNT_START)
-export const onTradedAmountError = makeActionCreator(TRADEDAMOUNT_ERROR)
+export const onTradedAmount = makeActionCreator(TRADEDAMOUNT)
+export const onTradedAmountError = makeActionCreator(TRADEDAMOUNT_ERROR, 'payload')
 export const onTradedAmountSuccess = makeActionCreator(TRADEDAMOUNT_SUCCESS, 'payload')
 
 export const onTradedAmountThunk = () => dispatch => {
@@ -84,7 +84,7 @@ export const onTradedAmountThunk = () => dispatch => {
   const payload = { chartStructure: arrayAmounts, csvStructure: cvsStructure }
 
   try {
-    dispatch(onTradedAmountStart())
+    dispatch(onTradedAmount())
     // TODO: Axios request to get result status and then compare result.status to dispatch Success or Error
     dispatch(onTradedAmountSuccess(payload))
   } catch (error) {

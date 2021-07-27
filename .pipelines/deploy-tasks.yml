@@ -1,18 +1,10 @@
 # This template is useful to React Apps that deploys on Openshift platform.
 # Notes:
-<<<<<<< HEAD
 # - You must ensure that the variables have a value: appName, appRoute, ocpNamespace, ocpToken
 #     appName -> the used aplication's name for Openshift to creates the pod. This variable is declared on variables.yml
 #     appRoute -> the domain where the app is. This is declared on azure-pipelines.yml
 #     appPath --> the subpath where the app is located. This is declared on azure-pipeline.yml and is used by deploy-template.yaml
 #     ocpNamespace -> the namespace where the aplication's pod is installed. This is declared on azure-pipelines.yml
-=======
-# - You must ensure that the variables have a value: appName, appRoute, ocpNamonthpace, ocpToken
-#     appName -> the used aplication's name for Openshift to creates the pod. This variable is declared on variables.yml
-#     appRoute -> the domain where the app is. This is declared on azure-pipelines.yml
-#     appPath --> the subpath where the app is located. This is declared on azure-pipeline.yml and is used by deploy-template.yaml
-#     ocpNamonthpace -> the namonthpace where the aplication's pod is installed. This is declared on azure-pipelines.yml
->>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
 #     ocpToken -> the token that Openshift requires to do the deployments. This is declared on variable groups called 'ReleaseReferences'
 #     appSSLMercadopublico -> defines if is used mercadopublico.cl SSL. Values: true or false
 #     appSSLChilecompra -> defines if is used chilecompra.cl SSL. Values: true or false
@@ -43,65 +35,37 @@ steps:
     displayName: 'local - process deploy template'
     inputs:
       targetType: 'inline'
-<<<<<<< HEAD
       script: 'oc process -f $(System.DefaultWorkingDirectory)/_artifact/.openshift/deploy-template.yaml -p APP_NAME=$(appName) -p APP_ROUTE=$(appRoute) -p APP_PATH=$(appPath) -p APP_NAMESPACE=$(ocpNamespace) -p APP_SSL_MERCADOPUBLICO=$(appSSLMercadopublico) -p APP_SSL_CHILECOMPRA=$(appSSLChilecompra) -n $(ocpNamespace) --local > $(System.DefaultWorkingDirectory)/_artifact/.openshift/deploy.yaml'
-=======
-      script: 'oc process -f $(System.DefaultWorkingDirectory)/_artifact/.openshift/deploy-template.yaml -p APP_NAME=$(appName) -p APP_ROUTE=$(appRoute) -p APP_PATH=$(appPath) -p APP_NAmonthPACE=$(ocpNamonthpace) -p APP_SSL_MERCADOPUBLICO=$(appSSLMercadopublico) -p APP_SSL_CHILECOMPRA=$(appSSLChilecompra) -n $(ocpNamonthpace) --local > $(System.DefaultWorkingDirectory)/_artifact/.openshift/deploy.yaml'
->>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
   - task: Bash@3
     displayName: 'local - process build template'
     inputs:
       targetType: 'inline'
-<<<<<<< HEAD
       script: 'oc process -f $(System.DefaultWorkingDirectory)/_artifact/.openshift/build-template.yaml -p APP_NAME=$(appName) -p APP_NAMESPACE=$(ocpNamespace) -n $(ocpNamespace) --local > $(System.DefaultWorkingDirectory)/_artifact/.openshift/build.yaml'
-=======
-      script: 'oc process -f $(System.DefaultWorkingDirectory)/_artifact/.openshift/build-template.yaml -p APP_NAME=$(appName) -p APP_NAmonthPACE=$(ocpNamonthpace) -n $(ocpNamonthpace) --local > $(System.DefaultWorkingDirectory)/_artifact/.openshift/build.yaml'
->>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
   - task: Bash@3
     displayName: 'oc - apply deploy'
     inputs:
       targetType: 'inline'
-<<<<<<< HEAD
       script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false  apply -f $(System.DefaultWorkingDirectory)/_artifact/.openshift/deploy.yaml  -n $(ocpNamespace)'
-=======
-      script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false  apply -f $(System.DefaultWorkingDirectory)/_artifact/.openshift/deploy.yaml  -n $(ocpNamonthpace)'
->>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
   - task: Bash@3
     displayName: 'oc - pause deployment rollout'
     inputs:
       targetType: 'inline'
-<<<<<<< HEAD
       script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false rollout pause dc/$(appName)  -n $(ocpNamespace)'
-=======
-      script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false rollout pause dc/$(appName)  -n $(ocpNamonthpace)'
->>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
   - task: Bash@3
     displayName: 'oc - apply build'
     inputs:
       targetType: 'inline'
-<<<<<<< HEAD
       script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false apply -f $(System.DefaultWorkingDirectory)/_artifact/.openshift/build.yaml  -n $(ocpNamespace)'
-=======
-      script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false apply -f $(System.DefaultWorkingDirectory)/_artifact/.openshift/build.yaml  -n $(ocpNamonthpace)'
->>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
   - task: Bash@3
     displayName: 'oc - start build'
     inputs:
       targetType: 'inline'
-<<<<<<< HEAD
       script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false start-build $(appName) --from-dir=$(System.DefaultWorkingDirectory)/_artifact/build/. -w  -n $(ocpNamespace)'
-=======
-      script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false start-build $(appName) --from-dir=$(System.DefaultWorkingDirectory)/_artifact/build/. -w  -n $(ocpNamonthpace)'
->>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
   - task: Bash@3
     displayName: 'oc - rollout deployment'
     inputs:
       targetType: 'inline'
-<<<<<<< HEAD
       script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false rollout resume dc/$(appName)  -n $(ocpNamespace)'
-=======
-      script: 'oc --server=$(ocpURL) --token=$(ocpToken) --insecure-skip-tls-verify=false rollout resume dc/$(appName)  -n $(ocpNamonthpace)'
->>>>>>> fc7735d5ffaacc64864999711204d558c13ca139
   - task: DeleteFiles@1
     displayName: 'delete used resources'
     inputs:

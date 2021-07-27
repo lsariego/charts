@@ -3,8 +3,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Typography from '../Basics/Typography'
-import { Grid } from '@material-ui/core'
-import { Root } from '../Infobar/Infobar.styles'
+import { Root, GridWrapper } from '../Infobar/Infobar.styles'
 import IconButton from '../Buttons/IconButton'
 import exportToCsv from '../../modules/utils/exportToCsv'
 
@@ -21,32 +20,30 @@ const Infobar = ({ data, imgButtonRef, showTable }) => {
   }
 
   return (
-    <>
-      <Root>
-        <Grid container justify="space-between" alignItems="center">
-          <Grid item xs={12} md={3}>
-            <Typography variant="subtitle" color="black1" fontWeight="bold">
-              ÚLTIMA ACTUALIZACIÓN: 26/07/2021
-            </Typography>
-          </Grid>
-          <Grid container item xs={12} md={6} align="right">
-            <Grid item xs={4} align="right">
-              <IconButton type="question">Aprende a leer el gráfico</IconButton>
-            </Grid>
-            <Grid item xs={4} align="right">
-              <IconButton type="chart" onClick={convertToImg} disabled={showTable}>
-                Guardar Gráfico
-              </IconButton>
-            </Grid>
-            <Grid item xs={4} align="right">
-              <IconButton type="download" onClick={downloadCsv}>
-                Descargar Datos
-              </IconButton>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Root>
-    </>
+    <Root>
+      <GridWrapper container justify="space-between" alignItems="center">
+        <GridWrapper item xs={12} md={3}>
+          <Typography variant="subtitle" color="black1" fontWeight="bold">
+            ÚLTIMA ACTUALIZACIÓN: 26/07/2021
+          </Typography>
+        </GridWrapper>
+        <GridWrapper container item xs={12} md={6} align="right">
+          <GridWrapper item xs={4} align="right">
+            <IconButton type="question">Aprende a leer el gráfico</IconButton>
+          </GridWrapper>
+          <GridWrapper item xs={4} align="right">
+            <IconButton type="chart" onClick={convertToImg} disabled={showTable}>
+              Guardar Gráfico
+            </IconButton>
+          </GridWrapper>
+          <GridWrapper item xs={4} align="right">
+            <IconButton type="download" onClick={downloadCsv}>
+              Descargar Datos
+            </IconButton>
+          </GridWrapper>
+        </GridWrapper>
+      </GridWrapper>
+    </Root>
   )
 }
 
