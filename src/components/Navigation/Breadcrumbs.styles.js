@@ -36,6 +36,11 @@ export const Root = styled(Breadcrumbs)`
     list-style: none;
     margin: 0 0 1rem;
     padding: 0 1rem 0 0;
+    justify-content: ${props => props.align ?? 'left'};
+
+    & > li:last-of-type{
+      font-weight: bold;
+    }
   }
 `
 

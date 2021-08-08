@@ -6,10 +6,10 @@ import { ExtenalLink, Link, Root, Text } from './Breadcrumbs.styles'
  * The Breadcrumbs' component.
  */
 const Breadcrumbs = props => {
-  const { accessibility, breadcrumbs } = props
+  const { accessibility, breadcrumbs, align } = props
 
   return (
-    <Root aria-label={accessibility.label}>
+    <Root aria-label={accessibility.label} align={align}>
       {breadcrumbs.map((breadcrumb, index) =>
         breadcrumb.link ? (
           breadcrumb.isExternal ? (
@@ -36,12 +36,14 @@ const Breadcrumbs = props => {
 Breadcrumbs.defaultProps = {
   accessibility: {
     label: 'breadcrumbs'
-  }
+  },
+  align: 'inherit'
 }
 Breadcrumbs.propTypes = {
   accessibility: PropTypes.shape({
     label: PropTypes.string
   }),
+  align: PropTypes.oneOf(['inherit', 'left', 'center', 'right', 'justify']),
   breadcrumbs: PropTypes.arrayOf(
     PropTypes.shape({
       isExternal: PropTypes.bool,

@@ -27,7 +27,7 @@ const Infobar = ({ data, imgButtonRef, showTable }) => {
             ÚLTIMA ACTUALIZACIÓN: 26/07/2021
           </Typography>
         </GridWrapper>
-        <GridWrapper container item xs={12} md={6} align="right">
+        <GridWrapper container item xs={12} md={7} align="right">
           <GridWrapper item xs={4} align="right">
             <IconButton type="question">Aprende a leer el gráfico</IconButton>
           </GridWrapper>

@@ -52,7 +52,12 @@ export const useInput = ({
 /**
  * The Select' custom hook.
  */
-export const useSelect = ({ errorCallbacks = [], errorMessage = '', initialValue = '' }) => {
+export const useSelect = ({
+  changeCallback = () => undefined,
+  errorCallbacks = [],
+  errorMessage = '',
+  initialValue = ''
+} = {}) => {
   const [value, setValue] = useState(initialValue)
   const [multipleValue, setMultipleValue] = useState(initialValue)
   const [count, setCount] = useState(0)
@@ -61,9 +66,16 @@ export const useSelect = ({ errorCallbacks = [], errorMessage = '', initialValue
       return setCount(count + 1)
     }
     setValue(event?.target?.value)
+    changeCallback(event?.target?.value)
   }
   const handleChangeMultiple = event => {
-    setMultipleValue(event.target.value)
+    if (event?.type !== 'blur') {
+      if (event.target.value.length < 1 || event.target.value.length > 4) {
+        return
+      }
+      setMultipleValue(event?.target?.value)
+      changeCallback(event?.target?.value)
+    }
   }
   const error = useMemo(() => {
     if (errorMessage !== '') {

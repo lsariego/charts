@@ -10,7 +10,7 @@ const initialState = {
 /**
  * Traded Amount's reducer.
  */
-const TradedAmountReducer = (state = initialState, { payload, type }) => {
+const tradedAmountReducer = (state = initialState, { payload, type }) => {
   switch (type) {
     case TRADEDAMOUNT: {
       return { ...state, fetching: true }
@@ -27,4 +27,4 @@ const TradedAmountReducer = (state = initialState, { payload, type }) => {
   }
 }
 
-export default TradedAmountReducer
+export default tradedAmountReducer

@@ -56,7 +56,7 @@ LinkButton.defaultProps = {
 }
 LinkButton.propTypes = {
   children: PropTypes.node.isRequired,
-  color: PropTypes.oneOf(['default', 'primary', 'success', 'error', 'warning', 'info']),
+  color: PropTypes.oneOf(['default', 'primary', 'success', 'error', 'warning', 'info', 'dark']),
   disabled: PropTypes.bool,
   loading: PropTypes.bool,
   margin: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

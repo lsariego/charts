@@ -67,6 +67,7 @@ Typography.propTypes = {
     'gray1',
     'gray2',
     'gray3',
+    'white',
     'primary',
     'success',
     'error',

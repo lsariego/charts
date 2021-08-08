@@ -1,23 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Wrapper, GridWrapper, BoxWrapper } from './TradedAmounts.styles'
+import { Wrapper, GridWrapper, BoxWrapper } from './BiddingsDistribution.styles'
 import Typography from '../../components/Basics/Typography'
-import formatToAmount from '../../modules/utils/formatters'
-import InfoLabel from '../../components/Labels/InfoLabel'
-import LineChart from '../../components/Charts/LineChart'
+import { useSelect } from '../../components/Inputs/Inputs.hooks'
+import Select from '../../components/Inputs/Select'
+import IconButton from '../../components/Buttons/IconButton'
+import { onBiddingsDistributionThunk } from './BiddingsDistribution.actions'
+import useSankeyChart from '../../components/Charts/SankeyChart.hooks'
+import SankeyChart from '../../components/Charts/SankeyChart'
+import Pagination from '../../components/Pagination/Pagination'
+import { usePagination } from '../../components/Pagination/Pagination.hooks'
 import Table from '../../components/Tables/Table.jsx'
 import TableRow from '../../components/Tables/TableRow'
 import TableCell from '../../components/Tables/TableCell'
 import Infobar from '../../components/Infobar/Infobar'
-import { useSelect } from '../../components/Inputs/Inputs.hooks'
-import Select from '../../components/Inputs/Select'
-import Pagination from '../../components/Pagination/Pagination'
-import { usePagination } from '../../components/Pagination/Pagination.hooks'
-import IconButton from '../../components/Buttons/IconButton'
-import { onTradedAmountThunk } from './TradedAmounts.actions'
-import useLineChart from '../../components/Charts/LineChart.hooks'
 
-const TradedAmounts = () => {
+const BiddingsDistribution = () => {
   // Toggle Between Chart / Table //
   const [showTable, setShowTable] = useState(false)
   const handleShowTable = updatedValue => () => setShowTable(updatedValue)
@@ -34,59 +32,67 @@ const TradedAmounts = () => {
     { name: '2014', value: 2014 }
   ]
   const distribution = [
-    { name: 'mes del año', value: 'amount' },
-    { name: 'monto acumulado', value: 'totalAmount' }
+    { name: 'Montos transados', value: 1 },
+    { name: 'Órdenes de compra', value: 2 },
+    { name: 'Número de licitaciones', value: 3 }
   ]
-  const { multipleValue: yearsValue, onChangeMultiple: handleChangeMultiple } = useSelect({
-    initialValue: [2021],
+
+  const { value: yearsValue, onChange: handleChange } = useSelect({
+    initialValue: 2021,
     changeCallback: updatedValue => {
-      dispatch(onTradedAmountThunk({ idEntity: '86568', years: updatedValue }))
+      dispatch(onBiddingsDistributionThunk(updatedValue, 6925, distValue))
     }
   })
-  const { value: distValue, onChange: handleDistribution } = useSelect({ initialValue: 'amount' })
+  const { value: distValue, onChange: handleDistribution } = useSelect({
+    initialValue: 1,
+    changeCallback: updatedValue => {
+      dispatch(onBiddingsDistributionThunk(yearsValue, 6925, updatedValue))
+    }
+  })
 
-  const inputLineChartRef = useRef()
-
-  // Load Data //
+  // Load Data
   const dispatch = useDispatch()
   const {
     data: { chartStructure, csvStructure }
-  } = useSelector(state => state.tradedAmount)
+  } = useSelector(state => state.biddingsDistribution)
 
   // Table's Pagination //
-  const rowsPerPage = 12
+  const rowsPerPage = 4
   const { page, totalPages, onChangePage, onGetCurrentPage } = usePagination({
     data: csvStructure.slice(1),
     initialPage: 1,
     rowsPerPage
   })
 
-  // LineChart Hook //
-  const { serie: info, category: categories } = useLineChart(chartStructure, distValue)
+  const inputSankeyChartRef = useRef()
+
+  // SankeyChart Hook //
+  const { serie: info } = useSankeyChart(chartStructure, distValue)
 
   useEffect(() => {
-    dispatch(onTradedAmountThunk({ idEntity: '86568', years: ['2021'] }))
+    dispatch(onBiddingsDistributionThunk(yearsValue, 6925, distValue))
   }, [])
 
   return (
     <Wrapper>
       <GridWrapper container>
-        <GridWrapper item xs={12} lg={10}>
+        <GridWrapper item xs={12}>
           <Typography variant="h2" fontWeight="bold">
-            Montos transados
+            Distribución de sus licitaciones públicas
           </Typography>
           <Typography variant="body" margin="30px 0 0 0">
-            Los montos transados por un organismo público se obtienen desde las órdenes de compra emitidas a través de
-            Mercado Público.
-            <br />
-            <br />A continuación podrás conocer como se distribuyen los montos transados del organismo público por año.
+            Las licitaciones son un procedimiento administrativo efectuado en forma autónoma por cada organismo comprador. Se publica una invitación a través de Mercado Público a los proveedores a proporcionar un bien o servicio, posteriormente se selecciona y adjudica la oferta más conveniente según los criterios que se establezcan en las bases de licitación.
+            <br /><br />
+            A continuación podrás conocer como se distribuyen los montos transados, número de órdenes de compra y número de licitaciones entre los distintos tipos de licitaciones públicas.
+            <br /><br />
+            La información referente a licitaciones se basa en todas aquellas licitaciones que se encuentren en estado “Adjudicada” o “Re-adjudicada”. Y la información de montos transados dentro de esta sección corresponde monto bruto (monto neto + impuestos).
           </Typography>
         </GridWrapper>
       </GridWrapper>
       <GridWrapper container spacing={3} alignItems="center">
         <GridWrapper item xs={6} md={2}>
           <BoxWrapper mt={5}>
-            <Select options={years} label="Año" multiple value={yearsValue} onChange={handleChangeMultiple} />
+            <Select options={years} label="Año" value={yearsValue} onChange={handleChange} />
           </BoxWrapper>
         </GridWrapper>
         <GridWrapper item xs={6} md={2}>
@@ -122,18 +128,16 @@ const TradedAmounts = () => {
                     <TableCell head padding="10">
                       Año
                     </TableCell>
-                    <TableCell head>mes</TableCell>
-                    <TableCell head>monto por mes</TableCell>
-                    <TableCell head>monto acumulado</TableCell>
+                    <TableCell head>Nombre</TableCell>
+                    <TableCell head>Valor</TableCell>
                   </TableRow>
                 }
               >
-                {onGetCurrentPage().map((yearItem, index) => (
+                {onGetCurrentPage().map((item, index) => (
                   <TableRow key={index} backgroundColor={index % 2 === 0 ? 'gray3' : null}>
-                    <TableCell padding="10">{yearItem[0]}</TableCell>
-                    <TableCell>{yearItem[1]}</TableCell>
-                    <TableCell>${formatToAmount(yearItem[2])}</TableCell>
-                    <TableCell>${formatToAmount(yearItem[3])}</TableCell>
+                    <TableCell padding="10">{item[0]}</TableCell>
+                    <TableCell>{item[1]}</TableCell>
+                    <TableCell>{item[2]}</TableCell>
                   </TableRow>
                 ))}
               </Table>
@@ -146,20 +150,17 @@ const TradedAmounts = () => {
           </>
         ) : (
           <GridWrapper item xs={12}>
-            <BoxWrapper mb={3}>
-              <InfoLabel label="Valores en millones (CLP)" />
-            </BoxWrapper>
-            <LineChart inputLineChartRef={inputLineChartRef} categories={categories} info={info} />
+            <SankeyChart inputSankeyChartRef={inputSankeyChartRef} data={info} />
           </GridWrapper>
         )}
       </GridWrapper>
       <GridWrapper>
         <BoxWrapper mt={2}>
-          <Infobar showTable={showTable} data={csvStructure} imgButtonRef={inputLineChartRef} />
+          <Infobar showTable={showTable} data={csvStructure} imgButtonRef={inputSankeyChartRef} />
         </BoxWrapper>
       </GridWrapper>
     </Wrapper>
   )
 }
 
-export default TradedAmounts
+export default BiddingsDistribution

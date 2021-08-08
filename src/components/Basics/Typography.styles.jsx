@@ -14,6 +14,7 @@ export const Jumbo = styled(({ color, fontSize, fontWeight, italic, lineHeight, 
         case 'gray1':
         case 'gray2':
         case 'gray3':
+        case 'white':
           return theme.palette.blackGrayBrand[color]
         case 'primary':
         case 'success':
@@ -58,6 +59,7 @@ export const Root = styled(({ color, fontSize, fontWeight, italic, lineHeight, m
       case 'gray1':
       case 'gray2':
       case 'gray3':
+      case 'white':
         return theme.palette.blackGrayBrand[color]
       case 'primary':
       case 'success':
@@ -127,6 +129,7 @@ export const Root = styled(({ color, fontSize, fontWeight, italic, lineHeight, m
         case 'gray1':
         case 'gray2':
         case 'gray3':
+        case 'white':
           return theme.palette.blackGrayBrand[color]
         case 'primary':
         case 'success':
@@ -150,6 +153,7 @@ export const Root = styled(({ color, fontSize, fontWeight, italic, lineHeight, m
         case 'gray1':
         case 'gray2':
         case 'gray3':
+        case 'white':
           return theme.palette.blackGrayBrand[color]
         case 'primary':
         case 'success':

@@ -4,34 +4,30 @@ import theme from '../../config/styles/theme'
 /**
  * The LineChart's custom hook.
  */
-const useLineChart = data => {
+const useLineChart = (chartStructure, distValue) => {
   const [serie, setSerie] = useState([])
-  const [category, setCategory] = useState([])
+  const category = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
   const colors = [
-    theme.palette.lineCharts.bondiBlue,
-    theme.palette.lineCharts.saffron,
-    theme.palette.lineCharts.tangerine,
-    theme.palette.lineCharts.cinnabar
+    theme.palette.charts.bondiBlue,
+    theme.palette.charts.saffron,
+    theme.palette.charts.tangerine,
+    theme.palette.charts.cinnabar
   ]
 
   useEffect(() => {
     const setData = () => {
-      const arraySeries = data.map((item, index) => ({
-        ...item,
+      const arraySeries = chartStructure.map((item, index) => ({
+        name: item.name,
+        amount: item.amount,
+        totalAmount: item.totalAmount,
+        data: item[distValue].map(dataItem => dataItem),
+        month: item.month,
         color: colors[index]
       }))
-      const arrayCategories = arraySeries.map(item => item.month)
-      const merged = [].concat.apply([], arrayCategories)
-      const arrayMerged = merged.reduce(function (a, b) {
-        if (a.indexOf(b) < 0) a.push(b)
-        return a
-      }, [])
-
-      setCategory(arrayMerged)
       setSerie(arraySeries)
     }
     setData()
-  }, [data])
+  }, [chartStructure, distValue])
 
   return { serie, category }
 }

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Wrapper, GridWrapper, BoxWrapper } from './TradedAmounts.styles'
+import { Wrapper, GridWrapper, BoxWrapper } from './BuyingModalities.styles'
 import Typography from '../../components/Basics/Typography'
 import formatToAmount from '../../modules/utils/formatters'
 import InfoLabel from '../../components/Labels/InfoLabel'
-import LineChart from '../../components/Charts/LineChart'
+import HorizontalBarsChart from '../../components/Charts/HorizontalBarsChart'
 import Table from '../../components/Tables/Table.jsx'
 import TableRow from '../../components/Tables/TableRow'
 import TableCell from '../../components/Tables/TableCell'
@@ -14,8 +14,8 @@ import Select from '../../components/Inputs/Select'
 import Pagination from '../../components/Pagination/Pagination'
 import { usePagination } from '../../components/Pagination/Pagination.hooks'
 import IconButton from '../../components/Buttons/IconButton'
-import { onTradedAmountThunk } from './TradedAmounts.actions'
-import useLineChart from '../../components/Charts/LineChart.hooks'
+import { onBuyingModalitiesThunk } from './BuyingModalities.actions'
+import useHorizontalBar from '../../components/Charts/HorizontalBarsChart.hooks'
 
 const TradedAmounts = () => {
   // Toggle Between Chart / Table //
@@ -33,68 +33,59 @@ const TradedAmounts = () => {
     { name: '2015', value: 2015 },
     { name: '2014', value: 2014 }
   ]
-  const distribution = [
-    { name: 'mes del año', value: 'amount' },
-    { name: 'monto acumulado', value: 'totalAmount' }
-  ]
-  const { multipleValue: yearsValue, onChangeMultiple: handleChangeMultiple } = useSelect({
-    initialValue: [2021],
+
+  const { value: yearsValue, onChange: handleChange } = useSelect({
+    initialValue: 2021,
     changeCallback: updatedValue => {
-      dispatch(onTradedAmountThunk({ idEntity: '86568', years: updatedValue }))
+      dispatch(onBuyingModalitiesThunk(86568, updatedValue))
     }
   })
-  const { value: distValue, onChange: handleDistribution } = useSelect({ initialValue: 'amount' })
 
-  const inputLineChartRef = useRef()
+  const inputHorizontalBarChartRef = useRef()
 
   // Load Data //
   const dispatch = useDispatch()
   const {
     data: { chartStructure, csvStructure }
-  } = useSelector(state => state.tradedAmount)
+  } = useSelector(state => state.buyingModalities)
 
   // Table's Pagination //
   const rowsPerPage = 12
   const { page, totalPages, onChangePage, onGetCurrentPage } = usePagination({
-    data: csvStructure.slice(1),
+    data: csvStructure,
     initialPage: 1,
     rowsPerPage
   })
 
-  // LineChart Hook //
-  const { serie: info, category: categories } = useLineChart(chartStructure, distValue)
+  // HorizontalBar Hook
+  const { serie: info, category: categories } = useHorizontalBar(chartStructure)
 
   useEffect(() => {
-    dispatch(onTradedAmountThunk({ idEntity: '86568', years: ['2021'] }))
+    dispatch(onBuyingModalitiesThunk(86568, 2021))
   }, [])
 
   return (
     <Wrapper>
       <GridWrapper container>
-        <GridWrapper item xs={12} lg={10}>
+        <GridWrapper item xs={12}>
           <Typography variant="h2" fontWeight="bold">
-            Montos transados
+            Modalidades de compra
           </Typography>
+          {setShowTable}
           <Typography variant="body" margin="30px 0 0 0">
-            Los montos transados por un organismo público se obtienen desde las órdenes de compra emitidas a través de
-            Mercado Público.
-            <br />
-            <br />A continuación podrás conocer como se distribuyen los montos transados del organismo público por año.
+            Estos son las modalidades bajo las cuales ha realizado sus compras ‘Municipalidad de Santiago’, a través de la plataforma Mercado Público en el periodo consultado.
+            <br /><br />
+            A continuación podrás conocer como realiza sus compras. Las órdenes de compra que se consideran en la visualización son todas aquellas que se encuentran en estado aceptado.
           </Typography>
         </GridWrapper>
       </GridWrapper>
       <GridWrapper container spacing={3} alignItems="center">
         <GridWrapper item xs={6} md={2}>
           <BoxWrapper mt={5}>
-            <Select options={years} label="Año" multiple value={yearsValue} onChange={handleChangeMultiple} />
+            <Select options={years} label="Año" value={yearsValue} onChange={handleChange} />
           </BoxWrapper>
         </GridWrapper>
-        <GridWrapper item xs={6} md={2}>
-          <BoxWrapper mt={5}>
-            <Select options={distribution} label="Distribución" value={distValue} onChange={handleDistribution} />
-          </BoxWrapper>
-        </GridWrapper>
-        <GridWrapper container item xs={12} md={8} justify="flex-end">
+        <GridWrapper container item xs={12} md={10} justify="flex-end">
           <BoxWrapper mt={8}>
             <IconButton
               type="toggleChart"
@@ -119,21 +110,17 @@ const TradedAmounts = () => {
               <Table
                 head={
                   <TableRow>
-                    <TableCell head padding="10">
-                      Año
-                    </TableCell>
-                    <TableCell head>mes</TableCell>
-                    <TableCell head>monto por mes</TableCell>
-                    <TableCell head>monto acumulado</TableCell>
+                    <TableCell head padding="10">Modalidad</TableCell>
+                    <TableCell head>Órdenes de compra</TableCell>
+                    <TableCell head>Monto total</TableCell>
                   </TableRow>
                 }
               >
-                {onGetCurrentPage().map((yearItem, index) => (
+                {onGetCurrentPage().map((item, index) => (
                   <TableRow key={index} backgroundColor={index % 2 === 0 ? 'gray3' : null}>
-                    <TableCell padding="10">{yearItem[0]}</TableCell>
-                    <TableCell>{yearItem[1]}</TableCell>
-                    <TableCell>${formatToAmount(yearItem[2])}</TableCell>
-                    <TableCell>${formatToAmount(yearItem[3])}</TableCell>
+                    <TableCell padding="10">{item[0]}</TableCell>
+                    <TableCell>{item[1]}</TableCell>
+                    <TableCell>${formatToAmount(item[2])}</TableCell>
                   </TableRow>
                 ))}
               </Table>
@@ -149,13 +136,13 @@ const TradedAmounts = () => {
             <BoxWrapper mb={3}>
               <InfoLabel label="Valores en millones (CLP)" />
             </BoxWrapper>
-            <LineChart inputLineChartRef={inputLineChartRef} categories={categories} info={info} />
+            <HorizontalBarsChart inputHorizontalBarChartRef={inputHorizontalBarChartRef} categories={categories} info={info} />
           </GridWrapper>
         )}
       </GridWrapper>
       <GridWrapper>
         <BoxWrapper mt={2}>
-          <Infobar showTable={showTable} data={csvStructure} imgButtonRef={inputLineChartRef} />
+          <Infobar showTable={showTable} data={csvStructure} imgButtonRef={inputHorizontalBarChartRef} />
         </BoxWrapper>
       </GridWrapper>
     </Wrapper>

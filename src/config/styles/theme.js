@@ -20,6 +20,7 @@ const theme = createMuiTheme({
         50: '#0064FF', // Primary
         35: '#0047B3', // Primary hover
         20: '#002966',
+        15: '#002866', // Main Info chilecompra
         10: '#001C41' // Footer chilecompra
       },
       blueRibbon: '#0064FF',
@@ -38,7 +39,8 @@ const theme = createMuiTheme({
       gray3: '#F0F2F5',
       white: '#FFFFFF',
       gray4: '#2E384D', // Added for this project
-      gray5: '#EDEBEB' // Added for this project
+      gray5: '#EDEBEB', // Added for this project
+      gray6: '#E5EFFF' // Added for this project
     },
     // The dark version are used to hover buttons and main for active
     primary: {
@@ -71,6 +73,11 @@ const theme = createMuiTheme({
       main: '#17A2B8', // FIXME: check with UX if info color must remain or deleted
       dark: '#148C9F'
     },
+    dark: {
+      light: '#333333',
+      main: '#252525', // Added for this project
+      dark: '#181818'
+    },
     MP: {
       black: '#000000',
       congressBlue: '#034C87',
@@ -88,11 +95,24 @@ const theme = createMuiTheme({
         hover: '#044076'
       }
     },
-    lineCharts: {
+    charts: {
       bondiBlue: '#0097A7',
       saffron: '#FBC02D',
       tangerine: '#F57C00',
-      cinnabar: '#E64A19'
+      cinnabar: '#E64A19',
+      lightSlate: '#768AA2',
+      lightenNavyBlue: '#66A2FF',
+      navyBlue: '#0064FF',
+      wisteria: '#BD8FD0',
+      darkenWisteria: '#C49AD5',
+      tonysPink: '#F2A48C',
+      darkenTonysPink: '#F3AD97',
+      macNcheese: '#FABD80',
+      darkenMacNcheese: '#FAC48D',
+      creamBrulee: '#FDDF96',
+      darkenCreamBrulee: '#FDE2A0',
+      spray: '#80CBD3',
+      darkenSpray: '#8DD0D7'
     }
   },
   typography: {
